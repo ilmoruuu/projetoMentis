@@ -97,7 +97,7 @@ export function CheckIn() {
             Seu registro de hoje foi compartilhado
           </p>
           <p className="text-gray-400 text-xs mb-8">
-            com sua equipe de cuidado. 💙
+            com sua equipe de cuidado.
           </p>
 
           {reflection && (
@@ -114,7 +114,7 @@ export function CheckIn() {
               onClick={() => navigate("/patient/sobriety")}
               className="w-full bg-gradient-to-r from-[#F4A261] to-[#E9C46A] text-white py-4 rounded-2xl font-bold text-base"
             >
-              Ver Minhas Conquistas 🏆
+              Ver Minhas Conquistas
             </button>
             <button
               onClick={() => navigate("/patient")}

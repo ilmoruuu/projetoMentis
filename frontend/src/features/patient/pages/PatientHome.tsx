@@ -9,24 +9,24 @@ import {
   Heart,
   Star,
 } from "lucide-react";
-import { currentPatient, milestones } from "../../data/mockData";
+import { currentPatient, milestones } from "../../../shared/data/mockData";
 
 const moodEmojis = ["", "😔", "😟", "😐", "🙂", "😊"];
 const moodLabels = ["", "Muito Ruim", "Ruim", "Neutro", "Bom", "Ótimo"];
 const moodColors = ["", "#EF4444", "#F97316", "#EAB308", "#22C55E", "#10B981"];
 
 function CircularProgress({
-  days,
-  maxDays = 30,
+  current,
+  total,
   color,
 }: {
-  days: number;
-  maxDays?: number;
+  current: number;
+  total: number;
   color: string;
 }) {
   const r = 54;
   const circ = 2 * Math.PI * r;
-  const pct = Math.min(days / maxDays, 1);
+  const pct = total > 0 ? Math.min(current / total, 1) : 0;
   const dash = circ * pct;
 
   return (
@@ -53,12 +53,53 @@ function CircularProgress({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold text-[#7C3826]">{days}</span>
+        <span className="text-3xl font-bold text-[#7C3826]">
+          {current}
+          <span className="text-lg text-gray-400">/{total}</span>
+        </span>
         <span className="text-xs text-gray-500">dias</span>
       </div>
     </div>
   );
 }
+
+// Reference month = month of the latest mood history entry (keeps the demo populated).
+function getMonthStats(dates: string[]) {
+  if (dates.length === 0) {
+    const now = new Date();
+    return {
+      year: now.getFullYear(),
+      month: now.getMonth(),
+      checkedIn: 0,
+      daysInMonth: new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(),
+    };
+  }
+  const sorted = [...dates].sort();
+  const ref = new Date(sorted[sorted.length - 1] + "T12:00:00");
+  const year = ref.getFullYear();
+  const month = ref.getMonth();
+  const checkedIn = dates.filter((d) => {
+    const dt = new Date(d + "T12:00:00");
+    return dt.getFullYear() === year && dt.getMonth() === month;
+  }).length;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  return { year, month, checkedIn, daysInMonth };
+}
+
+const monthNames = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+];
 
 export function PatientHome() {
   const navigate = useNavigate();
@@ -70,8 +111,9 @@ export function PatientHome() {
   const earnedMilestones = milestones.filter(
     (m) => m.days <= currentPatient.sobrietyDays,
   );
-  const nextMilestone = milestones.find(
-    (m) => m.days > currentPatient.sobrietyDays,
+
+  const monthStats = getMonthStats(
+    currentPatient.moodHistory.map((m) => m.date),
   );
 
   const streak = currentPatient.moodHistory.filter((m) => m.mood >= 3).length;
@@ -136,43 +178,41 @@ export function PatientHome() {
       >
         <div className="flex items-center justify-between mb-4">
           <p className="text-xs font-semibold text-gray-400 uppercase">
-            Sobriedade de {currentPatient.sobrietyType}
+            Check-ins de {monthNames[monthStats.month]}
           </p>
           <button
             onClick={() => navigate("/patient/sobriety")}
             className="text-xs text-[#F4A261] font-medium flex items-center gap-1"
           >
-            Ver detalhes <ChevronRight className="w-3 h-3" />
+            Ver calendário <ChevronRight className="w-3 h-3" />
           </button>
         </div>
         <div className="flex items-center justify-between">
           <CircularProgress
-            days={currentPatient.sobrietyDays}
-            maxDays={30}
+            current={monthStats.checkedIn}
+            total={monthStats.daysInMonth}
             color="#F4A261"
           />
           <div className="flex-1 pl-5 space-y-3">
             <div>
               <p className="text-2xl font-bold text-[#7C3826]">
-                {currentPatient.sobrietyDays} Dias
+                {monthStats.checkedIn}{" "}
+                <span className="text-base font-normal text-gray-400">
+                  / {monthStats.daysInMonth}
+                </span>
               </p>
               <p className="text-gray-500 text-sm capitalize">
-                Sem {currentPatient.sobrietyType}!
+                Dias com check-in em {monthNames[monthStats.month]}
               </p>
             </div>
-            {nextMilestone && (
-              <div className="bg-orange-50 rounded-xl p-3">
-                <p className="text-xs text-orange-600 font-semibold">
-                  Próxima conquista
-                </p>
-                <p className="text-sm text-[#7C3826]">
-                  {nextMilestone.icon} {nextMilestone.label}
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Faltam {nextMilestone.days - currentPatient.sobrietyDays} dias
-                </p>
-              </div>
-            )}
+            <div className="bg-orange-50 rounded-xl p-3">
+              <p className="text-xs text-orange-600 font-semibold capitalize">
+                Livre de {currentPatient.sobrietyType}
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Continue marcando seus dias para acompanhar sua jornada. 💛
+              </p>
+            </div>
           </div>
         </div>
 

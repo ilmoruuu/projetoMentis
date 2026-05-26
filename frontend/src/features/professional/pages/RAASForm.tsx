@@ -21,7 +21,7 @@ import {
   procedureCodes,
   cidCodes,
   ProcedureCode,
-} from "../../data/mockData";
+} from "../../../shared/data/mockData";
 
 interface ActionRow {
   id: string;
