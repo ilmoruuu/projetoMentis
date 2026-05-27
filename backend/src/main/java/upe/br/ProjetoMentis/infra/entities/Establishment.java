@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import upe.br.ProjetoMentis.infra.enums.FederativeUnit;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,8 @@ public class Establishment {
     private String cnes;
     private String city;
 
-    private String uf;
+    @Enumerated(EnumType.STRING)
+    private FederativeUnit uf;
 
     @OneToMany(mappedBy = "establishment")
     private List<Patient> patients;
