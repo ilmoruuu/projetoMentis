@@ -16,7 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id")
+    @Column(name = "id_user")
     private UUID id;
 
     @Enumerated(EnumType.STRING)

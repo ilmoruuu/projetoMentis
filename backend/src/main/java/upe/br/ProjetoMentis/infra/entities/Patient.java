@@ -19,12 +19,12 @@ import java.util.UUID;
 public class Patient {
 
     @Id
-    @Column(name = "patient_id")
+    @Column(name = "id_patient")
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "id_user")
     private User user;
 
     @Column(name = "date_of_birth", nullable = false)
