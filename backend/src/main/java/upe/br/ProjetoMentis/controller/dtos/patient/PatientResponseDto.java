@@ -52,9 +52,7 @@ public record PatientResponseDto(
     }
 
     public static Patient toEntity(PatientResponseDto dto) {
-        if (dto == null) {
-            return null;
-        }
+        if (dto == null) return null;
 
         User user = new User();
         user.setId(dto.id());
@@ -76,6 +74,7 @@ public record PatientResponseDto(
         patient.setAddress(dto.address());
         patient.setSobriedade(dto.sobriedade());
         patient.setLastCheckin(dto.lastCheckin());
+
         user.setPatient(patient);
 
         return patient;
