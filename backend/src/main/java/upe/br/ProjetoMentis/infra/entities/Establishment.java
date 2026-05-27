@@ -6,19 +6,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.UUID;
+
 @Entity
 @Table (name = "unidade_saude")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class UnidadadeSaude {
+public class Establishment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column (name = "id_establishment")
+    private UUID id;
 
-    private String nome_estabelecimento;
+    private String establishmentName;
     private String cnes;
-    private String municipio;
+    private String city;
+
     private String uf;
+
+    @OneToMany(mappedBy = "establishment")
+    private List<Patient> patients;
+
+    @OneToMany(mappedBy = "establishment" )
+    private List<Professional> professionals;
+
 }
