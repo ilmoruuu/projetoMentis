@@ -58,5 +58,5 @@ public class Patient {
     private String sobriedade;
 
     @Column(name = "last_checkin", nullable = false)
-    private LocalDate lastCheckIn;
+    private LocalDate lastCheckin;
 }
