@@ -62,4 +62,8 @@ public class Patient {
 
     @Column(name = "last_checkin", nullable = false)
     private LocalDate lastCheckin;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_establishment")
+    private Establishment establishment;
 }

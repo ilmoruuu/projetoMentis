@@ -30,4 +30,8 @@ public class Professional {
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @ManyToOne
+    @JoinColumn(name="id_establishment")
+    private Establishment establishment;
 }
