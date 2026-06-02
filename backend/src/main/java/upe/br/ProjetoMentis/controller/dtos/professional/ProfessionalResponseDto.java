@@ -12,7 +12,7 @@ public record ProfessionalResponseDto(
         UserRole role,
         String name,
         String email,
-        String cbo,
+        String crp,
         UserStatus status
 ) {
 
@@ -22,7 +22,7 @@ public record ProfessionalResponseDto(
                 professional.getUser().getRole(),
                 professional.getUser().getName(),
                 professional.getUser().getEmail(),
-                professional.getCbo(),
+                professional.getCrp(),
                 professional.getStatus()
         );
     }
@@ -39,7 +39,7 @@ public record ProfessionalResponseDto(
         Professional professional = new Professional();
         professional.setId(dto.id());
         professional.setUser(user);
-        professional.setCbo(dto.cbo());
+        professional.setCrp(dto.crp);
         professional.setStatus(dto.status());
 
         user.setProfessional(professional);

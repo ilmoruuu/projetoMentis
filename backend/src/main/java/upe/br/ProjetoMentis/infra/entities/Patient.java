@@ -27,6 +27,9 @@ public class Patient {
     @JoinColumn(name = "id_user")
     private User user;
 
+    @Column(nullable = false)
+    private String cbo;
+
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 

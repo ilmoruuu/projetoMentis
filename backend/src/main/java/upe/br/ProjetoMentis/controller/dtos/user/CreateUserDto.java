@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import upe.br.ProjetoMentis.controller.dtos.patient.CreatePatientDto;
 import upe.br.ProjetoMentis.controller.dtos.professional.CreateProfessionalDto;
+import upe.br.ProjetoMentis.infra.entities.User;
 import upe.br.ProjetoMentis.infra.enums.UserRole;
 
 
@@ -24,4 +25,14 @@ public record CreateUserDto(
         @Valid
         CreateProfessionalDto professional
 ) {
+
+        public static CreateUserDto toDto(User user) {
+                return new CreateUserDto(
+                        user.getRole(),
+                        user.getName(),
+                        user.getEmail(),
+                        CreatePatientDto.toDto(user.getPatient()),
+                        CreateProfessionalDto.toDto(user.getProfessional())
+                );
+        }
 }

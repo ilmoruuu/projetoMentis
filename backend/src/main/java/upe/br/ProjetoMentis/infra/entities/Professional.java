@@ -26,7 +26,7 @@ public class Professional {
     @JoinColumn(name = "id_user")
     private User user;
 
-    private String cbo;
+    private String crp;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
