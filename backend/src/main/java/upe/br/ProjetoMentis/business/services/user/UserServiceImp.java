@@ -53,18 +53,22 @@ public class UserServiceImp implements UserService {
     @Override
     @Transactional
     public UserResponseDto updateUser(UUID id, UpdateUserDto user) {
-        if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("Usuário não encontrado com o ID: " + id);
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + id));
+
+        this.validateEmailForUpdate(user.email(), id);
+
+        existingUser.setName(user.name());
+        existingUser.setEmail(user.email());
+
+        return UserResponseDto.toDto(existingUser);
+    }
+
+    @Transactional(readOnly = true)
+    public void validateEmailForUpdate(String newEmail, UUID currentUserId) {
+        if (userRepository.existsByEmailAndIdNot(newEmail, currentUserId)) {
+            throw new IllegalArgumentException("Este e-mail já está sendo utilizado por outro usuário.");
         }
-
-        User updatedUser = new User();
-        updatedUser.setId(id);
-        updatedUser.setName(user.name());
-        updatedUser.setEmail(user.email());
-        updatedUser.setRole(user.role());
-
-        User savedUser = userRepository.save(updatedUser);
-        return UserResponseDto.toDto(savedUser);
     }
 
     @Override

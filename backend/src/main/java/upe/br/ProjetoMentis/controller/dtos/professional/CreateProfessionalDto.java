@@ -3,7 +3,6 @@ package upe.br.ProjetoMentis.controller.dtos.professional;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import upe.br.ProjetoMentis.infra.entities.Professional;
-import upe.br.ProjetoMentis.infra.enums.UserStatus;
 
 public record CreateProfessionalDto(
         @NotBlank(message = "O nome é obrigatório")
