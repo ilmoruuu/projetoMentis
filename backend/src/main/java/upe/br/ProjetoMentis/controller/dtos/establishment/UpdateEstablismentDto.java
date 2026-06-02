@@ -4,8 +4,7 @@ import upe.br.ProjetoMentis.infra.enums.FederativeUnit;
 
 import java.util.UUID;
 
-public record EstablismentEditDto(
-        UUID id,
+public record UpdateEstablismentDto(
         String establishmentName,
         String cnes,
         String city,

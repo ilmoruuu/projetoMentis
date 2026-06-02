@@ -2,8 +2,8 @@ package upe.br.ProjetoMentis.business.services.establishment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentCreateDto;
-import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentEditDto;
+import upe.br.ProjetoMentis.controller.dtos.establishment.CreateEstablismentDto;
+import upe.br.ProjetoMentis.controller.dtos.establishment.UpdateEstablismentDto;
 import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentResponseDto;
 import upe.br.ProjetoMentis.infra.entities.Establishment;
 import upe.br.ProjetoMentis.infra.repositories.EstablishmentRepository;
@@ -19,7 +19,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public EstablismentResponseDto createEstablishment(
-            EstablismentCreateDto dto) {
+            CreateEstablismentDto dto) {
 
         Establishment establishment = new Establishment();
 
@@ -34,11 +34,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public EstablismentResponseDto editEstablishment(
-            EstablismentEditDto dto) {
+    public EstablismentResponseDto updateEstablishment(
+            UUID id,
+            UpdateEstablismentDto dto) {
 
         Establishment establishment = establishmentRepository
-                .findById(dto.id())
+                .findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Estabelecimento não encontrado"));
 

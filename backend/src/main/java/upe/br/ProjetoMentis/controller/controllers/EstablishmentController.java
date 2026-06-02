@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import upe.br.ProjetoMentis.business.services.establishment.EstablishmentService;
-import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentCreateDto;
-import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentEditDto;
+import upe.br.ProjetoMentis.controller.dtos.establishment.CreateEstablismentDto;
+import upe.br.ProjetoMentis.controller.dtos.establishment.UpdateEstablismentDto;
 import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentResponseDto;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class EstablishmentController {
 
     @PostMapping("/create")
     public ResponseEntity<EstablismentResponseDto> create(
-            @RequestBody EstablismentCreateDto dto) {
+            @RequestBody CreateEstablismentDto dto) {
 
         EstablismentResponseDto response =
                 establishmentService.createEstablishment(dto);
@@ -29,12 +29,13 @@ public class EstablishmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping
+    @PutMapping("/update/{id}")
     public ResponseEntity<EstablismentResponseDto> update(
-            @RequestBody EstablismentEditDto dto) {
+            @PathVariable UUID id,
+            @RequestBody UpdateEstablismentDto dto) {
 
         EstablismentResponseDto response =
-                establishmentService.editEstablishment(dto);
+                establishmentService.updateEstablishment(id, dto);
 
         return ResponseEntity.ok(response);
     }
