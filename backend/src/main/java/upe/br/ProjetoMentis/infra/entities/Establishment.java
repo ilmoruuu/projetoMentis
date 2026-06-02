@@ -18,7 +18,7 @@ import java.util.UUID;
 @Setter
 public class Establishment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column (name = "id_establishment")
     private UUID id;
 
