@@ -16,6 +16,7 @@ public record PatientResponseDto(
         String name,
         String email,
         // Dados de Patient
+        String cbo,
         LocalDate dateOfBirth,
         String gender,
         String sex,
@@ -37,6 +38,7 @@ public record PatientResponseDto(
                 user.getRole(),
                 user.getName(),
                 user.getEmail(),
+                patient.getCbo(),
                 patient.getDateOfBirth(),
                 patient.getGender(),
                 patient.getSex(),
@@ -52,9 +54,7 @@ public record PatientResponseDto(
     }
 
     public static Patient toEntity(PatientResponseDto dto) {
-        if (dto == null) {
-            return null;
-        }
+        if (dto == null) return null;
 
         User user = new User();
         user.setId(dto.id());
@@ -65,6 +65,7 @@ public record PatientResponseDto(
         Patient patient = new Patient();
         patient.setId(dto.id());
         patient.setUser(user);
+        patient.setCbo(dto.cbo());
         patient.setDateOfBirth(dto.dateOfBirth());
         patient.setGender(dto.gender());
         patient.setSex(dto.sex());
@@ -76,6 +77,7 @@ public record PatientResponseDto(
         patient.setAddress(dto.address());
         patient.setSobriedade(dto.sobriedade());
         patient.setLastCheckin(dto.lastCheckin());
+
         user.setPatient(patient);
 
         return patient;

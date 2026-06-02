@@ -18,15 +18,15 @@ import java.util.UUID;
 public class Professional {
 
     @Id
-    @Column(name = "professional_id")
+    @Column(name = "id_professional")
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "id_user")
     private User user;
 
-    private String cbo;
+    private String crp;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
