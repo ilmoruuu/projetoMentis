@@ -13,5 +13,6 @@ public interface UserService {
     UserResponseDto createUser(CreateUserDto user);
     UserResponseDto updateUser(UUID id, UpdateUserDto user);
     void validateEmailUniqueness(String email);
+    void validateEmailForUpdate(String newEmail, UUID currentUserId);
     void deleteUser(UUID id);
 }
