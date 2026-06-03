@@ -36,7 +36,9 @@ public record CreatePatientDto(
         String cep,
 
         @NotBlank(message = "Endereço é obrigatório")
-        String address
+        String address,
+
+        String sobriedade
 ) {
         public static CreatePatientDto toDto(Patient patient){
                 return new CreatePatientDto(
@@ -50,7 +52,8 @@ public record CreatePatientDto(
                         patient.getCity(),
                         patient.getUf(),
                         patient.getCep(),
-                        patient.getAddress()
+                        patient.getAddress(),
+                        patient.getSobriedade()
                 );
         }
 }
