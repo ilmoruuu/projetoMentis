@@ -22,8 +22,8 @@ public record UserResponseDto(
                 user.getRole(),
                 user.getName(),
                 user.getEmail(),
-                PatientResponseDto.toDto(user.getPatient()),
-                ProfessionalResponseDto.toDto(user.getProfessional())
+                user.getPatient() != null ? PatientResponseDto.toDto(user.getPatient()) : null,
+                user.getProfessional() != null ? ProfessionalResponseDto.toDto(user.getProfessional()) : null
         );
     }
 
