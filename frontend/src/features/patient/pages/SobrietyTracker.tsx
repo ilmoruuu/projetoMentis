@@ -1,64 +1,36 @@
 import { useState } from "react";
-import { motion } from "motion/react";
-import { currentPatient, milestones } from "../../data/mockData";
-import { Trophy, Plus, RotateCcw, Calendar, Zap, Star } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { ChevronLeft, ChevronRight, Trophy, Zap, Star, X } from "lucide-react";
+import { currentPatient, milestones } from "../../../shared/data/mockData";
 
-function CircularRing({
-  days,
-  maxDays,
-  color,
-  size = 180,
-}: {
-  days: number;
-  maxDays: number;
-  color: string;
-  size?: number;
-}) {
-  const strokeWidth = 14;
-  const r = (size - strokeWidth) / 2;
-  const circ = 2 * Math.PI * r;
-  const pct = Math.min(days / maxDays, 1);
-  const dash = circ * pct;
+const moodEmojis = ["", "😔", "😟", "😐", "🙂", "😊"];
+const moodLabels = ["", "Muito Ruim", "Ruim", "Neutro", "Bom", "Ótimo"];
+const moodColors = ["", "#EF4444", "#F97316", "#EAB308", "#22C55E", "#10B981"];
 
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke="#F3F4F6"
-          strokeWidth={strokeWidth}
-        />
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          initial={{ strokeDasharray: `0 ${circ}` }}
-          animate={{ strokeDasharray: `${dash} ${circ}` }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <motion.span
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, type: "spring" }}
-          className="text-5xl font-bold"
-          style={{ color }}
-        >
-          {days}
-        </motion.span>
-        <span className="text-gray-400 text-sm mt-1">dias</span>
-      </div>
-    </div>
-  );
-}
+const monthNames = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+];
+
+const weekdayLabels = ["D", "S", "T", "Q", "Q", "S", "S"];
+
+const motivationalQuotes = [
+  "Cada dia sóbrio é uma vitória que ninguém pode tirar de você.",
+  "Você já provou que é mais forte do que qualquer vício.",
+  "O caminho da recuperação é feito de um passo de cada vez.",
+  "Sua coragem de pedir ajuda é o maior ato de força.",
+  "Você merece uma vida plena e feliz. Continue assim!",
+];
 
 function MilestoneBadge({
   milestone,
@@ -127,165 +99,244 @@ function MilestoneBadge({
   );
 }
 
-const motivationalQuotes = [
-  "Cada dia sóbrio é uma vitória que ninguém pode tirar de você. 💪",
-  "Você já provou que é mais forte do que qualquer vício. 🌟",
-  "O caminho da recuperação é feito de um passo de cada vez. 👣",
-  "Sua coragem de pedir ajuda é o maior ato de força. ❤️",
-  "Você merece uma vida plena e feliz. Continue assim! 🌈",
-];
+function MonthCalendar({
+  year,
+  month,
+  markedDates,
+  selectedDate,
+  onPrev,
+  onNext,
+  onSelectDay,
+}: {
+  year: number;
+  month: number;
+  markedDates: Set<string>;
+  selectedDate: string | null;
+  onPrev: () => void;
+  onNext: () => void;
+  onSelectDay: (date: string) => void;
+}) {
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+  const todayKey =
+    today.getFullYear() === year && today.getMonth() === month
+      ? today.getDate()
+      : -1;
+
+  const cells: (number | null)[] = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const dateKey = (day: number) =>
+    `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  return (
+    <div className="bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-gray-100">
+      <div className="flex items-center justify-between mb-5">
+        <button
+          onClick={onPrev}
+          className="p-2 rounded-xl text-gray-400 hover:bg-gray-50 transition-colors"
+          aria-label="Mês anterior"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <h3 className="font-bold text-[#7C3826] text-lg">
+          {monthNames[month]} {year}
+        </h3>
+        <button
+          onClick={onNext}
+          className="p-2 rounded-xl text-gray-400 hover:bg-gray-50 transition-colors"
+          aria-label="Próximo mês"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-1.5 mb-2">
+        {weekdayLabels.map((w, i) => (
+          <div
+            key={i}
+            className="text-center text-xs font-semibold text-[#F4A261] py-1"
+          >
+            {w}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-7 gap-1.5">
+        {cells.map((day, i) => {
+          if (day === null) {
+            return <div key={i} className="aspect-square" />;
+          }
+          const key = dateKey(day);
+          const isMarked = markedDates.has(key);
+          const isToday = day === todayKey;
+          const isSelected = selectedDate === key;
+          return (
+            <motion.button
+              key={i}
+              type="button"
+              disabled={!isMarked}
+              onClick={() => isMarked && onSelectDay(key)}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.01 }}
+              whileTap={isMarked ? { scale: 0.9 } : undefined}
+              className={`aspect-square rounded-full flex items-center justify-center text-sm transition-all ${
+                isMarked
+                  ? "bg-[#F4A261] text-white font-bold shadow-sm cursor-pointer hover:bg-[#E76F51]"
+                  : "bg-white text-gray-600 border border-gray-100 cursor-default"
+              } ${isToday ? "ring-2 ring-[#F4A261] ring-offset-1" : ""} ${
+                isSelected ? "ring-2 ring-[#7C3826] ring-offset-1" : ""
+              }`}
+            >
+              {day}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center justify-center gap-5 mt-5 pt-4 border-t border-gray-100">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-[#F4A261]" />
+          <span className="text-xs text-gray-500">Dia marcado</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-white border border-gray-200" />
+          <span className="text-xs text-gray-500">Sem registro</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function SobrietyTracker() {
-  const [days, setDays] = useState(currentPatient.sobrietyDays);
-  const [showReset, setShowReset] = useState(false);
+  const markedDates = new Set(currentPatient.moodHistory.map((m) => m.date));
+
+  // Open on the month of the most recent activity (or current month if none)
+  const initialDate = (() => {
+    const dates = [...currentPatient.moodHistory.map((m) => m.date)].sort();
+    if (dates.length === 0) return new Date();
+    return new Date(dates[dates.length - 1] + "T12:00:00");
+  })();
+  const [view, setView] = useState({
+    year: initialDate.getFullYear(),
+    month: initialDate.getMonth(),
+  });
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const selectedEntry = selectedDate
+    ? currentPatient.moodHistory.find((m) => m.date === selectedDate) ?? null
+    : null;
+
+  const goPrev = () =>
+    setView((v) => {
+      const m = v.month - 1;
+      return m < 0
+        ? { year: v.year - 1, month: 11 }
+        : { year: v.year, month: m };
+    });
+  const goNext = () =>
+    setView((v) => {
+      const m = v.month + 1;
+      return m > 11
+        ? { year: v.year + 1, month: 0 }
+        : { year: v.year, month: m };
+    });
+
+  const days = currentPatient.sobrietyDays;
+  const earnedMilestones = milestones.filter((m) => m.days <= days);
+  const nextMilestone = milestones.find((m) => m.days > days);
+
+  const monthMarkedCount = currentPatient.moodHistory.filter((m) => {
+    const d = new Date(m.date + "T12:00:00");
+    return d.getFullYear() === view.year && d.getMonth() === view.month;
+  }).length;
+
   const quoteIdx =
     Math.floor(Date.now() / 86400000) % motivationalQuotes.length;
 
-  const earnedMilestones = milestones.filter((m) => m.days <= days);
-  const nextMilestone = milestones.find((m) => m.days > days);
-  const prevMilestone = earnedMilestones[earnedMilestones.length - 1];
-
-  // Color based on streak
-  const ringColor =
-    days >= 180
-      ? "#7C3AED"
-      : days >= 90
-        ? "#059669"
-        : days >= 30
-          ? "#F4A261"
-          : days >= 7
-            ? "#3B82F6"
-            : "#EF4444";
-
-  const pct = nextMilestone
-    ? ((days - (prevMilestone?.days ?? 0)) /
-        (nextMilestone.days - (prevMilestone?.days ?? 0))) *
-      100
-    : 100;
-
   return (
-    <div className="px-4 py-5 space-y-5">
-      {/* Main Counter Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 text-center"
-      >
-        <p className="text-xs font-semibold text-gray-400 uppercase mb-2">
-          Contador de Sobriedade
-        </p>
-        <p className="text-gray-600 text-sm mb-5 capitalize">
-          Livre de{" "}
-          <span className="font-bold text-[#7C3826]">
-            {currentPatient.sobrietyType}
-          </span>
-        </p>
+    <div className="px-4 md:px-6 py-5 space-y-5">
+      <MonthCalendar
+        year={view.year}
+        month={view.month}
+        markedDates={markedDates}
+        selectedDate={selectedDate}
+        onPrev={() => {
+          setSelectedDate(null);
+          goPrev();
+        }}
+        onNext={() => {
+          setSelectedDate(null);
+          goNext();
+        }}
+        onSelectDay={(d) => setSelectedDate((curr) => (curr === d ? null : d))}
+      />
 
-        <div className="flex justify-center mb-4">
-          <CircularRing
-            days={days}
-            maxDays={nextMilestone?.days ?? 365}
-            color={ringColor}
-          />
-        </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="text-xl font-bold mb-1"
-          style={{ color: ringColor }}
-        >
-          {days === 1 ? "1 Dia" : `${days} Dias`} Sem{" "}
-          {currentPatient.sobrietyType}!
-        </motion.p>
-
-        {nextMilestone ? (
-          <div className="mt-4">
-            <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-              <span>{prevMilestone ? prevMilestone.label : "Início"}</span>
-              <span>
-                {nextMilestone.icon} {nextMilestone.label} ({nextMilestone.days}{" "}
-                dias)
-              </span>
-            </div>
-            <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${pct}%` }}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
-                className="h-full rounded-full"
-                style={{ backgroundColor: ringColor }}
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Faltam{" "}
-              <span className="font-bold" style={{ color: ringColor }}>
-                {nextMilestone.days - days} dias
-              </span>{" "}
-              para {nextMilestone.icon} {nextMilestone.label}
-            </p>
-          </div>
-        ) : (
-          <div className="mt-4 bg-purple-50 rounded-2xl p-3">
-            <p className="text-purple-600 font-bold text-sm">
-              🎊 Você alcançou todos os marcos!
-            </p>
-            <p className="text-purple-400 text-xs mt-1">
-              Você é uma inspiração para todos. ❤️
-            </p>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex gap-3 mt-5">
-          <button
-            onClick={() => setDays((d) => d + 1)}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-white font-bold text-sm"
-            style={{
-              background: `linear-gradient(135deg, ${ringColor}, ${ringColor}CC)`,
-            }}
+      <AnimatePresence>
+        {selectedEntry && (
+          <motion.div
+            key={selectedEntry.date}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="bg-white rounded-2xl p-5 shadow-sm border border-orange-100"
           >
-            <Plus className="w-4 h-4" />
-            +1 Dia
-          </button>
-          <button
-            onClick={() => setShowReset(true)}
-            className="px-4 py-3 rounded-2xl border border-gray-200 text-gray-400 hover:bg-gray-50 transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </div>
-
-        {showReset && (
-          <div className="mt-3 bg-red-50 border border-red-100 rounded-2xl p-4 text-left">
-            <p className="text-red-600 text-sm font-semibold mb-1">
-              Reiniciar contador?
-            </p>
-            <p className="text-red-400 text-xs mb-3">
-              Não há vergonha em recomeçar. A jornada de recuperação tem altos e
-              baixos, e o que importa é continuar tentando. 💙
-            </p>
-            <div className="flex gap-2">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase">
+                  Registro do dia
+                </p>
+                <p className="text-sm text-[#7C3826] font-bold capitalize">
+                  {new Date(selectedEntry.date + "T12:00:00").toLocaleDateString(
+                    "pt-BR",
+                    { weekday: "long", day: "2-digit", month: "long" },
+                  )}
+                </p>
+              </div>
               <button
-                onClick={() => {
-                  setDays(0);
-                  setShowReset(false);
-                }}
-                className="flex-1 bg-red-500 text-white py-2 rounded-xl text-xs font-bold"
+                onClick={() => setSelectedDate(null)}
+                aria-label="Fechar"
+                className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-50 transition-colors"
               >
-                Reiniciar
-              </button>
-              <button
-                onClick={() => setShowReset(false)}
-                className="flex-1 bg-gray-100 text-gray-600 py-2 rounded-xl text-xs font-bold"
-              >
-                Cancelar
+                <X className="w-4 h-4" />
               </button>
             </div>
-          </div>
+
+            <div className="flex items-center gap-4 mb-3">
+              <span className="text-5xl">{moodEmojis[selectedEntry.mood]}</span>
+              <div>
+                <p
+                  className="font-bold text-lg"
+                  style={{ color: moodColors[selectedEntry.mood] }}
+                >
+                  {moodLabels[selectedEntry.mood]}
+                </p>
+                <p className="text-gray-400 text-xs">Humor registrado</p>
+              </div>
+            </div>
+
+            {selectedEntry.reflection ? (
+              <div className="bg-orange-50 rounded-xl p-3">
+                <p className="text-xs font-semibold text-orange-600 mb-1">
+                  Sua reflexão
+                </p>
+                <p className="text-sm text-[#7C3826] italic">
+                  "{selectedEntry.reflection}"
+                </p>
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 italic">
+                Nenhuma reflexão registrada neste dia.
+              </p>
+            )}
+          </motion.div>
         )}
-      </motion.div>
+      </AnimatePresence>
 
       {/* Motivational Quote */}
       <motion.div
@@ -306,10 +357,10 @@ export function SobrietyTracker() {
       <div className="grid grid-cols-3 gap-3">
         {[
           {
-            icon: <Calendar className="w-5 h-5" />,
-            label: "Dias Totais",
-            value: days,
-            color: ringColor,
+            icon: <Star className="w-5 h-5" />,
+            label: `Em ${monthNames[view.month]}`,
+            value: monthMarkedCount,
+            color: "#F4A261",
           },
           {
             icon: <Zap className="w-5 h-5" />,
@@ -350,7 +401,7 @@ export function SobrietyTracker() {
             {earnedMilestones.length}/{milestones.length} desbloqueados
           </span>
         </div>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
           {milestones.map((m) => {
             const earned = m.days <= days;
             const isCurrent = nextMilestone?.days === m.days;
