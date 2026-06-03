@@ -15,7 +15,9 @@ import upe.br.ProjetoMentis.infra.entities.User;
 import upe.br.ProjetoMentis.infra.enums.UserRole;
 import upe.br.ProjetoMentis.infra.enums.UserStatus;
 import upe.br.ProjetoMentis.infra.repositories.PatientRepository;
+import upe.br.ProjetoMentis.infra.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +26,7 @@ import java.util.UUID;
 public class PatientServiceImp implements PatientService{
 
     private final PatientRepository patientRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
 
     @Override
@@ -54,6 +57,7 @@ public class PatientServiceImp implements PatientService{
         user.setRole(UserRole.PATIENT);
 
         Patient newPatient = new Patient();
+        newPatient.setCbo(patient.cbo());
         newPatient.setDateOfBirth(patient.dateOfBirth());
         newPatient.setGender(patient.gender());
         newPatient.setSex(patient.sex());
@@ -61,14 +65,18 @@ public class PatientServiceImp implements PatientService{
         newPatient.setCity(patient.city());
         newPatient.setUf(patient.uf());
         newPatient.setCep(patient.cep());
+        newPatient.setSobriedade(patient.sobriedade());
         newPatient.setAddress(patient.address());
+
+        newPatient.setLastCheckin(LocalDate.now());
         newPatient.setStatus(UserStatus.ACTIVE);
 
         newPatient.setUser(user);
         user.setPatient(newPatient);
 
-        Patient savedPatient = patientRepository.save(newPatient);
-        return PatientResponseDto.toDto(savedPatient);
+        User newUser = userRepository.save(user);
+
+        return PatientResponseDto.toDto(newUser.getPatient());
     }
 
     @Override
@@ -107,6 +115,7 @@ public class PatientServiceImp implements PatientService{
         Patient existingPatient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado com ID: " + id));
 
+        userService.deleteUser(existingPatient.getUser().getId());
         patientRepository.delete(existingPatient);
     }
 }

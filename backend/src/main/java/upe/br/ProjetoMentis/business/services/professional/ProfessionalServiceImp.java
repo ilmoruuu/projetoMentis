@@ -12,6 +12,7 @@ import upe.br.ProjetoMentis.infra.entities.User;
 import upe.br.ProjetoMentis.infra.enums.UserRole;
 import upe.br.ProjetoMentis.infra.enums.UserStatus;
 import upe.br.ProjetoMentis.infra.repositories.ProfessionalRepository;
+import upe.br.ProjetoMentis.infra.repositories.UserRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class ProfessionalServiceImp implements ProfessionalService{
 
     private final ProfessionalRepository professionalRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
 
     @Override
@@ -57,9 +59,9 @@ public class ProfessionalServiceImp implements ProfessionalService{
         newProfessional.setUser(user);
         user.setProfessional(newProfessional);
 
-        Professional savedProfessional = professionalRepository.save(newProfessional);
+        User savedUser = userRepository.save(user);
 
-        return ProfessionalResponseDto.toDto(savedProfessional);
+        return ProfessionalResponseDto.toDto(savedUser.getProfessional());
     }
 
     @Override
@@ -89,6 +91,7 @@ public class ProfessionalServiceImp implements ProfessionalService{
         Professional existingProfessional = professionalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Profissonal não encontrado com ID: " + id));
 
+        userService.deleteUser(existingProfessional.getUser().getId());
         professionalRepository.delete(existingProfessional);
     }
 }
