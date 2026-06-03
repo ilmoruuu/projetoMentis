@@ -1,7 +1,7 @@
 package upe.br.ProjetoMentis.business.services.establishment;
 
-import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentCreateDto;
-import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentEditDto;
+import upe.br.ProjetoMentis.controller.dtos.establishment.CreateEstablismentDto;
+import upe.br.ProjetoMentis.controller.dtos.establishment.UpdateEstablismentDto;
 import upe.br.ProjetoMentis.controller.dtos.establishment.EstablismentResponseDto;
 
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface EstablishmentService {
 
-    EstablismentResponseDto createEstablishment(EstablismentCreateDto establishment);
+    EstablismentResponseDto createEstablishment(CreateEstablismentDto establishment);
 
-    EstablismentResponseDto editEstablishment(EstablismentEditDto establishment);
+    EstablismentResponseDto updateEstablishment(UUID id, UpdateEstablismentDto dto);
 
     EstablismentResponseDto findById(UUID id);
 
