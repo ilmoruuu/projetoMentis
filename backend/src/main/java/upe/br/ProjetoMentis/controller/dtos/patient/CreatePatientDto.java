@@ -26,6 +26,8 @@ public record CreatePatientDto(
 
         String race,
 
+        String observation,
+
         @NotBlank(message = "Cidade é obrigatória")
         String city,
 
@@ -49,6 +51,7 @@ public record CreatePatientDto(
                         patient.getGender(),
                         patient.getSex(),
                         patient.getRace(),
+                        patient.getObservation(),
                         patient.getCity(),
                         patient.getUf(),
                         patient.getCep(),

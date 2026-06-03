@@ -45,6 +45,9 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @Column(length = 200)
+    private String observation;
+
     @Column(length = 30, nullable = false)
     private String city;
 

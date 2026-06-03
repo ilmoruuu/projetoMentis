@@ -21,6 +21,7 @@ public record PatientResponseDto(
         String gender,
         String sex,
         String race,
+        String observation,
         UserStatus status,
         String city,
         String uf,
@@ -43,6 +44,7 @@ public record PatientResponseDto(
                 patient.getGender(),
                 patient.getSex(),
                 patient.getRace(),
+                patient.getObservation(),
                 patient.getStatus(),
                 patient.getCity(),
                 patient.getUf(),
@@ -70,6 +72,7 @@ public record PatientResponseDto(
         patient.setGender(dto.gender());
         patient.setSex(dto.sex());
         patient.setRace(dto.race());
+        patient.setObservation(dto.observation());
         patient.setStatus(dto.status());
         patient.setCity(dto.city());
         patient.setUf(dto.uf());

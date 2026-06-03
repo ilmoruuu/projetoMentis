@@ -62,13 +62,14 @@ public class PatientServiceImp implements PatientService{
         newPatient.setGender(patient.gender());
         newPatient.setSex(patient.sex());
         newPatient.setRace(patient.race());
+        newPatient.setObservation(patient.observation());
         newPatient.setCity(patient.city());
         newPatient.setUf(patient.uf());
         newPatient.setCep(patient.cep());
-        newPatient.setSobriedade(patient.sobriedade());
         newPatient.setAddress(patient.address());
-
+        newPatient.setSobriedade(patient.sobriedade());
         newPatient.setLastCheckin(LocalDate.now());
+
         newPatient.setStatus(UserStatus.ACTIVE);
 
         newPatient.setUser(user);
@@ -100,6 +101,7 @@ public class PatientServiceImp implements PatientService{
         existingPatient.setGender(patient.gender());
         existingPatient.setSex(patient.sex());
         existingPatient.setRace(patient.race());
+        existingPatient.setObservation(patient.observation());
         existingPatient.setCity(patient.city());
         existingPatient.setUf(patient.uf());
         existingPatient.setCep(patient.cep());
