@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router";
-import { LandingPage } from "./components/LandingPage";
-import { ProfessionalLayout } from "./components/professional/ProfessionalLayout";
-import { Dashboard } from "./components/professional/Dashboard";
-import { RAASForm } from "./components/professional/RAASForm";
-import { PatientLayout } from "./components/patient/PatientLayout";
-import { PatientHome } from "./components/patient/PatientHome";
-import { CheckIn } from "./components/patient/CheckIn";
-import { SobrietyTracker } from "./components/patient/SobrietyTracker";
+import { LandingPage } from "../features/landing/LandingPage";
+import { ProfessionalLayout } from "../features/professional/components/ProfessionalLayout";
+import { Dashboard } from "../features/professional/pages/Dashboard";
+import { RAASForm } from "../features/professional/pages/RAASForm";
+import { PatientLayout } from "../features/patient/components/PatientLayout";
+import { PatientHome } from "../features/patient/pages/PatientHome";
+import { CheckIn } from "../features/patient/pages/CheckIn";
+import { SobrietyTracker } from "../features/patient/pages/SobrietyTracker";
 
 export const router = createBrowserRouter([
   {

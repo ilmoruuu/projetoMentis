@@ -16,7 +16,7 @@ import {
   Meh,
   Laugh,
 } from "lucide-react";
-import { patients, Patient } from "../../data/mockData";
+import { patients, Patient } from "../../../shared/data/mockData";
 
 const moodLabels = ["", "Muito Ruim", "Ruim", "Neutro", "Bom", "Ótimo"];
 const moodColors = ["", "#EF4444", "#F97316", "#EAB308", "#22C55E", "#10B981"];
