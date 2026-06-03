@@ -21,7 +21,7 @@ import {
   procedureCodes,
   cidCodes,
   ProcedureCode,
-} from "../../data/mockData";
+} from "../../../shared/data/mockData";
 
 interface ActionRow {
   id: string;
@@ -138,7 +138,14 @@ export function RAASForm() {
   >(null);
   const [primaryCID, setPrimaryCID] = useState("");
   const [secondaryCID, setSecondaryCID] = useState("");
+
+  const [observations, setObservations] = useState("");
+  const [broadCIDObservation, setBroadCIDObservation] = useState("");
+
   const [submitted, setSubmitted] = useState(false);
+
+  const [sexuality, setSexuality] = useState("");
+  const [religion, setReligion] = useState("");
 
   const [actions, setActions] = useState<ActionRow[]>([
     {
@@ -253,6 +260,7 @@ export function RAASForm() {
   }
 
   return (
+    <>
     <div className="flex gap-6">
       {/* Main Form */}
       <div className="flex-1 space-y-5">
@@ -387,6 +395,23 @@ export function RAASForm() {
             <FormField label="UF" value={patient.state} readOnly />
             <FormField label="CEP" value={patient.cep} readOnly />
             <FormField label="Telefone" value={patient.phone} readOnly />
+            <div className="col-span-2">
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                  Observações do Paciente
+                </label>
+
+                <textarea
+                  value={observations}
+                  onChange={(e) => setObservations(e.target.value)}
+                  rows={4}
+                  placeholder="Ex.: Sexualidade, religião, informações culturais, preferências do usuário ou outras observações relevantes."
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-[#1B82BF]/30 focus:border-[#1B82BF]"
+                />
+
+                <p className="text-xs text-gray-400 mt-1">
+                  Campo opcional para informações complementares do usuário.
+                </p>
+            </div>
           </div>
         </SectionCard>
 
@@ -534,6 +559,23 @@ export function RAASForm() {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+            <div className="col-span-2 mt-6">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                CID Ampliado / Observação Clínica
+              </label>
+
+              <textarea
+                value={broadCIDObservation}
+                onChange={(e) => setBroadCIDObservation(e.target.value)}
+                rows={5}
+                placeholder="Descreva informações clínicas complementares..."
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-[#1B82BF]/30 focus:border-[#1B82BF]"
+              />
+
+              <p className="text-xs text-gray-400 mt-2">
+                Campo complementar ao CID-10 para contextualização clínica do paciente.
+              </p>
             </div>
           </div>
         </SectionCard>
@@ -806,5 +848,6 @@ export function RAASForm() {
         )}
       </AnimatePresence>
     </div>
+</>
   );
 }

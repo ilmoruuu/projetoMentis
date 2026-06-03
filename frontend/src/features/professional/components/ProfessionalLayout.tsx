@@ -7,7 +7,7 @@ import {
   ShieldCheck,
   Bell,
 } from "lucide-react";
-import { currentProfessional } from "../../data/mockData";
+import { currentProfessional } from "../../../shared/data/mockData";
 
 export function ProfessionalLayout() {
   const navigate = useNavigate();
