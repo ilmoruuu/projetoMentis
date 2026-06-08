@@ -27,7 +27,7 @@ public class Achievement {
     private String description;
 
     @Column(name = "goal_in_days", nullable = false)
-    private int goalInDays;
+    private Integer goalInDays;
 
     @OneToMany(mappedBy = "achievement")
     private List<PatientAchievement> patientAchievements = new ArrayList<>();
