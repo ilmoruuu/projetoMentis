@@ -65,7 +65,7 @@ public class PatientServiceImp implements PatientService{
         newPatient.setCity(patient.city());
         newPatient.setUf(patient.uf());
         newPatient.setCep(patient.cep());
-        newPatient.setSobriedade(patient.sobriedade());
+        newPatient.setSobriety(patient.sobriety());
         newPatient.setAddress(patient.address());
 
         newPatient.setLastCheckin(LocalDate.now());
@@ -104,7 +104,7 @@ public class PatientServiceImp implements PatientService{
         existingPatient.setUf(patient.uf());
         existingPatient.setCep(patient.cep());
         existingPatient.setAddress(patient.address());
-        existingPatient.setSobriedade(patient.sobriedade());
+        existingPatient.setSobriety(patient.sobriety());
 
         return PatientResponseDto.toDto(existingPatient);
     }

@@ -26,7 +26,7 @@ public record PatientResponseDto(
         String uf,
         String cep,
         String address,
-        String sobriedade,
+        String sobriety,
         LocalDate lastCheckin
 ) {
 
@@ -48,7 +48,7 @@ public record PatientResponseDto(
                 patient.getUf(),
                 patient.getCep(),
                 patient.getAddress(),
-                patient.getSobriedade(),
+                patient.getSobriety(),
                 patient.getLastCheckin()
         );
     }
@@ -75,7 +75,7 @@ public record PatientResponseDto(
         patient.setUf(dto.uf());
         patient.setCep(dto.cep());
         patient.setAddress(dto.address());
-        patient.setSobriedade(dto.sobriedade());
+        patient.setSobriety(dto.sobriety());
         patient.setLastCheckin(dto.lastCheckin());
 
         user.setPatient(patient);
