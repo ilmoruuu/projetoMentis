@@ -8,6 +8,8 @@ import lombok.Setter;
 import upe.br.ProjetoMentis.infra.enums.UserStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -58,7 +60,7 @@ public class Patient {
     private String address;
 
     // Tem que ver oq isso significa
-    private String sobriedade;
+    private String sobriety;
 
     @Column(name = "last_checkin", nullable = false)
     private LocalDate lastCheckin;
@@ -66,4 +68,7 @@ public class Patient {
     @ManyToOne()
     @JoinColumn(name = "id_establishment")
     private Establishment establishment;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PatientAchievement> achievements = new ArrayList<>();
 }
