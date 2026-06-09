@@ -4,11 +4,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import upe.br.ProjetoMentis.controller.dtos.achievement.CreateAchievementDto;
+import upe.br.ProjetoMentis.controller.dtos.patientAchievement.CreatePatientAchievementDto;
 import upe.br.ProjetoMentis.controller.dtos.patientAchievement.PatientAchievementDto;
 import upe.br.ProjetoMentis.infra.entities.PatientAchievement;
 import upe.br.ProjetoMentis.infra.entities.PatientAchievementId;
 import upe.br.ProjetoMentis.infra.repositories.PatientAchievementRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,12 +62,18 @@ public class PatientAchievementServiceImp implements PatientAchievementService {
 
     @Override
     @Transactional
-    public PatientAchievementDto assignAchievementToPatient(PatientAchievementDto dto) {
+    public PatientAchievementDto assignAchievementToPatient(CreatePatientAchievementDto dto) {
         if (hasPatientAchievement(dto.patientId(), dto.achievementId())) {
             throw new IllegalStateException("Este paciente já possui esta conquista desbloqueada.");
         }
 
-        PatientAchievement entity = PatientAchievementDto.toEntity(dto);
+        PatientAchievementDto patientAchievementDto = new PatientAchievementDto(
+                dto.patientId(),
+                dto.achievementId(),
+                LocalDate.now()
+        );
+
+        PatientAchievement entity = PatientAchievementDto.toEntity(patientAchievementDto);
 
         PatientAchievement savedEntity = patientAchievementRepository.save(entity);
         return PatientAchievementDto.toDto(savedEntity);

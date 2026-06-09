@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import upe.br.ProjetoMentis.business.services.patientAchievement.PatientAchievementService;
+import upe.br.ProjetoMentis.controller.dtos.achievement.CreateAchievementDto;
+import upe.br.ProjetoMentis.controller.dtos.patientAchievement.CreatePatientAchievementDto;
 import upe.br.ProjetoMentis.controller.dtos.patientAchievement.PatientAchievementDto;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class PatientAchievementController {
 
     @PostMapping
     public ResponseEntity<PatientAchievementDto> assignAchievementToPatient(
-            @RequestBody @Valid PatientAchievementDto dto) {
+            @RequestBody @Valid CreatePatientAchievementDto dto) {
         PatientAchievementDto response = patientAchievementService.assignAchievementToPatient(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
