@@ -1,12 +1,7 @@
 import { useNavigate } from "react-router";
 import { motion } from "motion/react";
-import {
-  ShieldCheck,
-  Stethoscope,
-  Heart,
-  Lock,
-  CheckCircle2,
-} from "lucide-react";
+import { ShieldCheck, Stethoscope, Heart, CheckCircle2 } from "lucide-react";
+import logoBranca from "../../assets/logo-branca.png";
 
 export function LandingPage() {
   const navigate = useNavigate();
@@ -15,17 +10,11 @@ export function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#0F4C75] via-[#1B82BF] to-[#2A9D8F] flex flex-col">
       {/* Header */}
       <header className="px-8 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
-            <Heart className="w-6 h-6 text-[#1B82BF]" fill="#1B82BF" />
-          </div>
-          <div>
-            <h1 className="text-white font-bold text-lg leading-tight">
-              CAPS AD Connect
-            </h1>
-            <p className="text-blue-200 text-xs">Sistema Integrado SUS</p>
-          </div>
-        </div>
+        <img
+          src={logoBranca}
+          alt="Projeto Mentis"
+          className="h-16 w-auto object-contain"
+        />
         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
           <ShieldCheck className="w-4 h-4 text-green-300" />
           <span className="text-white text-sm">Dados Seguros</span>
@@ -33,19 +22,13 @@ export function LandingPage() {
       </header>
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-10">
+      <main className="flex-1 flex flex-col items-center justify-center px-6 pt-4 pb-24">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-5 py-2 mb-6">
-            <CheckCircle2 className="w-4 h-4 text-green-300" />
-            <span className="text-white text-sm">
-              Integrado ao Ministério da Saúde
-            </span>
-          </div>
           <h2 className="text-white text-4xl md:text-5xl font-bold leading-tight mb-4">
             Cuidado Psicossocial
             <br />
@@ -141,40 +124,7 @@ export function LandingPage() {
             </div>
           </motion.button>
         </div>
-
-        {/* Trust badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-6 mt-10"
-        >
-          {[
-            {
-              icon: <ShieldCheck className="w-4 h-4" />,
-              text: "LGPD Conformidade",
-            },
-            { icon: <Lock className="w-4 h-4" />, text: "Criptografia SSL" },
-            {
-              icon: <CheckCircle2 className="w-4 h-4" />,
-              text: "RNDS Integrado",
-            },
-          ].map((badge) => (
-            <div
-              key={badge.text}
-              className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2"
-            >
-              <span className="text-green-300">{badge.icon}</span>
-              <span className="text-white text-sm">{badge.text}</span>
-            </div>
-          ))}
-        </motion.div>
       </main>
-
-      <footer className="text-center pb-6 text-blue-200 text-xs">
-        © 2026 CAPS AD Connect — Sistema Único de Saúde (SUS) · Ministério da
-        Saúde
-      </footer>
     </div>
   );
 }
