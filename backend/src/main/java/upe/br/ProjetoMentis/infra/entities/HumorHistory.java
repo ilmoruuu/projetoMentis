@@ -19,14 +19,19 @@ import java.util.UUID;
 public class HumorHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
+    @Column (name = "id_humor_history")
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
-    MoodType moodType;
+    private MoodType moodType;
 
     @Column(length = 340, nullable = false)
-    String description;
+    private String description;
 
     @Column(name = "register-date", nullable = false)
-    LocalDateTime dateTime;
+    private LocalDateTime dateTime;
+
+    @ManyToOne
+    @JoinColumn(name = "id_patient", nullable = false)
+    private Patient patient;
 }
