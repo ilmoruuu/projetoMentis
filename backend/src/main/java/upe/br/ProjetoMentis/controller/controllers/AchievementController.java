@@ -1,4 +1,4 @@
-package upe.br.ProjetoMentis.controller.achievement;
+package upe.br.ProjetoMentis.controller.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
