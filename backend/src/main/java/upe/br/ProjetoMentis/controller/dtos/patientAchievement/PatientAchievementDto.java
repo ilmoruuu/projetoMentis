@@ -22,24 +22,26 @@ public record PatientAchievementDto(
     }
 
     public static PatientAchievement toEntity(PatientAchievementDto dto) {
+        if (dto == null) return null;
+
         PatientAchievement entity = new PatientAchievement();
 
-        PatientAchievementId compositeId = new PatientAchievementId(dto.patientId, dto.achievementId);
+        PatientAchievementId compositeId = new PatientAchievementId(dto.patientId(), dto.achievementId());
         entity.setId(compositeId);
 
-        if (dto.patientId != null) {
+        if (dto.patientId() != null) {
             Patient patient = new Patient();
-            patient.setId(dto.patientId);
+            patient.setId(dto.patientId());
             entity.setPatient(patient);
         }
 
-        if (dto.achievementId != null) {
+        if (dto.achievementId() != null) {
             Achievement achievement = new Achievement();
-            achievement.setId(dto.achievementId);
+            achievement.setId(dto.achievementId());
             entity.setAchievement(achievement);
         }
 
-        entity.setAcquisitionDate(dto.acquisitionDate);
+        entity.setAcquisitionDate(dto.acquisitionDate());
 
         return entity;
     }
