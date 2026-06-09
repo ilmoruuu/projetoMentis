@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import upe.br.ProjetoMentis.infra.enums.ActionCode;
-import upe.br.ProjetoMentis.infra.enums.Competence;
 
+import java.time.YearMonth;
 import java.util.UUID;
 
 @Getter
@@ -21,8 +21,7 @@ public class Actions {
     @Column(name = "id_action")
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private Competence competence;
+    private YearMonth competence;
 
     @Enumerated(EnumType.STRING)
     private ActionCode actionCode;
