@@ -66,7 +66,7 @@ export function LandingPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             whileHover={{ scale: 1.03, y: -4 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigate("/professional")}
+            onClick={() => navigate("/login?role=profissional")}
             className="group bg-white rounded-2xl p-8 shadow-2xl text-left relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#E8F4F8] rounded-full -translate-y-16 translate-x-16" />
@@ -107,7 +107,7 @@ export function LandingPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             whileHover={{ scale: 1.03, y: -4 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigate("/patient")}
+            onClick={() => navigate("/login?role=paciente")}
             className="group bg-white rounded-2xl p-8 shadow-2xl text-left relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFF8F0] rounded-full -translate-y-16 translate-x-16" />
