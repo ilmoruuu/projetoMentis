@@ -6,15 +6,18 @@ import upe.br.ProjetoMentis.infra.entities.PatientAchievement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public record AchievementDto(
+public record AchievementResponseDto(
+        UUID id,
         String description,
         Integer goalInDays,
         List<PatientAchievementDto> patientAchievements
 ) {
 
-    public static AchievementDto toDto(Achievement achievement) {
-        return new AchievementDto(
+    public static AchievementResponseDto toDto(Achievement achievement) {
+        return new AchievementResponseDto(
+                achievement.getId(),
                 achievement.getDescription(),
                 achievement.getGoalInDays(),
                 achievement.getPatientAchievements() != null
@@ -23,8 +26,9 @@ public record AchievementDto(
         );
     }
 
-    public static Achievement toEntity(AchievementDto dto) {
+    public static Achievement toEntity(AchievementResponseDto dto) {
         Achievement achievement = new Achievement();
+        achievement.setId(dto.id);
         achievement.setDescription(dto.description);
         achievement.setGoalInDays(dto.goalInDays);
 
