@@ -8,8 +8,6 @@ import upe.br.ProjetoMentis.business.services.user.UserService;
 import upe.br.ProjetoMentis.controller.dtos.patient.CreatePatientDto;
 import upe.br.ProjetoMentis.controller.dtos.patient.PatientResponseDto;
 import upe.br.ProjetoMentis.controller.dtos.patient.UpdatePatientDto;
-import upe.br.ProjetoMentis.controller.dtos.user.CreateUserDto;
-import upe.br.ProjetoMentis.controller.dtos.user.UserResponseDto;
 import upe.br.ProjetoMentis.infra.entities.Patient;
 import upe.br.ProjetoMentis.infra.entities.User;
 import upe.br.ProjetoMentis.infra.enums.UserRole;
@@ -65,7 +63,7 @@ public class PatientServiceImp implements PatientService{
         newPatient.setCity(patient.city());
         newPatient.setUf(patient.uf());
         newPatient.setCep(patient.cep());
-        newPatient.setSobriedade(patient.sobriedade());
+        newPatient.setSobriety(patient.sobriety());
         newPatient.setAddress(patient.address());
 
         newPatient.setLastCheckin(LocalDate.now());
@@ -104,7 +102,7 @@ public class PatientServiceImp implements PatientService{
         existingPatient.setUf(patient.uf());
         existingPatient.setCep(patient.cep());
         existingPatient.setAddress(patient.address());
-        existingPatient.setSobriedade(patient.sobriedade());
+        existingPatient.setSobriety(patient.sobriety());
 
         return PatientResponseDto.toDto(existingPatient);
     }

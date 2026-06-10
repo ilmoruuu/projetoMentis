@@ -1,5 +1,6 @@
 package upe.br.ProjetoMentis.controller.dtos.patient;
 
+import upe.br.ProjetoMentis.controller.dtos.patientAchievement.PatientAchievementDto;
 import upe.br.ProjetoMentis.controller.dtos.user.UserResponseDto;
 import upe.br.ProjetoMentis.infra.entities.Patient;
 import upe.br.ProjetoMentis.infra.entities.User;
@@ -7,6 +8,8 @@ import upe.br.ProjetoMentis.infra.enums.UserRole;
 import upe.br.ProjetoMentis.infra.enums.UserStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public record PatientResponseDto(
@@ -26,8 +29,9 @@ public record PatientResponseDto(
         String uf,
         String cep,
         String address,
-        String sobriedade,
-        LocalDate lastCheckin
+        String sobriety,
+        LocalDate lastCheckin,
+        List<PatientAchievementDto> achievements
 ) {
 
     public static PatientResponseDto toDto(Patient patient) {
@@ -48,8 +52,11 @@ public record PatientResponseDto(
                 patient.getUf(),
                 patient.getCep(),
                 patient.getAddress(),
-                patient.getSobriedade(),
-                patient.getLastCheckin()
+                patient.getSobriety(),
+                patient.getLastCheckin(),
+                patient.getAchievements() != null
+                        ? patient.getAchievements().stream().map(PatientAchievementDto::toDto).toList()
+                        : new ArrayList<>()
         );
     }
 
@@ -75,9 +82,21 @@ public record PatientResponseDto(
         patient.setUf(dto.uf());
         patient.setCep(dto.cep());
         patient.setAddress(dto.address());
-        patient.setSobriedade(dto.sobriedade());
+        patient.setSobriety(dto.sobriety());
         patient.setLastCheckin(dto.lastCheckin());
 
+        if (dto.achievements() != null) {
+            patient.setAchievements(
+                    dto.achievements().stream()
+                            .map(achievementDto -> {
+                                var entity = PatientAchievementDto.toEntity(achievementDto);
+
+                                entity.setPatient(patient);
+                                return entity;
+                            })
+                            .collect(java.util.stream.Collectors.toList())
+            );
+        }
         user.setPatient(patient);
 
         return patient;
