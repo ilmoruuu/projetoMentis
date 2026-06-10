@@ -71,4 +71,6 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PatientAchievement> achievements = new ArrayList<>();
+    @OneToMany(mappedBy = "patient")
+    private List<HumorHistory> humorHistory;
 }
