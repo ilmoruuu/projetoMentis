@@ -38,7 +38,7 @@ public record CreatePatientDto(
         @NotBlank(message = "Endereço é obrigatório")
         String address,
 
-        String sobriedade
+        String sobriety
 ) {
         public static CreatePatientDto toDto(Patient patient){
                 return new CreatePatientDto(
@@ -53,7 +53,7 @@ public record CreatePatientDto(
                         patient.getUf(),
                         patient.getCep(),
                         patient.getAddress(),
-                        patient.getSobriedade()
+                        patient.getSobriety()
                 );
         }
 }

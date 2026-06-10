@@ -14,6 +14,6 @@ public record UpdatePatientDto(
         String uf,
         String cep,
         String address,
-        String sobriedade
+        String sobriety
 ) {
 }
