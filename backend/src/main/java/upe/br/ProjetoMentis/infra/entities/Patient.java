@@ -75,5 +75,8 @@ public class Patient {
     private List<HumorHistory> humorHistory;
 
     @OneToMany(mappedBy = "patient")
+    private List<CheckIn> checkIns;
+  
+    @OneToMany(mappedBy = "patient")
     private List<Actions> actions;
 }
