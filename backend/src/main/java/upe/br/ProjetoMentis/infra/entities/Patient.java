@@ -70,4 +70,7 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     private List<HumorHistory> humorHistory;
+
+    @OneToMany(mappedBy = "patient")
+    private List<CheckIn> checkIns;
 }
