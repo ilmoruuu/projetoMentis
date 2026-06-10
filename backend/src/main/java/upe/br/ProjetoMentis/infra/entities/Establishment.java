@@ -35,4 +35,7 @@ public class Establishment {
     @OneToMany(mappedBy = "establishment" )
     private List<Professional> professionals;
 
+    @OneToMany(mappedBy = "establishment")
+    private List<Actions> actions;
+
 }

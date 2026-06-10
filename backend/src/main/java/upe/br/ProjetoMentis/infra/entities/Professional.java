@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import upe.br.ProjetoMentis.infra.enums.UserStatus;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -34,4 +35,7 @@ public class Professional {
     @ManyToOne
     @JoinColumn(name="id_establishment")
     private Establishment establishment;
+
+    @OneToMany(mappedBy = "professional")
+    private List<Actions> actions;
 }

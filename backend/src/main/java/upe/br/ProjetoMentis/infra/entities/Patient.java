@@ -73,4 +73,7 @@ public class Patient {
     private List<PatientAchievement> achievements = new ArrayList<>();
     @OneToMany(mappedBy = "patient")
     private List<HumorHistory> humorHistory;
+
+    @OneToMany(mappedBy = "patient")
+    private List<Actions> actions;
 }
