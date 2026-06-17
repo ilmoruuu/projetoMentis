@@ -2,12 +2,10 @@ package upe.br.ProjetoMentis.controller.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import upe.br.ProjetoMentis.business.services.user.UserService;
-import upe.br.ProjetoMentis.controller.dtos.user.CreateUserDto;
-import upe.br.ProjetoMentis.controller.dtos.user.UpdateUserDto;
+import upe.br.ProjetoMentis.controller.dtos.user.LoginDto;
 import upe.br.ProjetoMentis.controller.dtos.user.UserResponseDto;
 
 import java.util.UUID;
@@ -35,5 +33,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@RequestBody @Valid LoginDto loginDto) {
+        userService.login(loginDto);
+        return ResponseEntity.ok().build();
     }
 }

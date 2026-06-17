@@ -2,9 +2,12 @@ package upe.br.ProjetoMentis.business.services.user;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import upe.br.ProjetoMentis.controller.dtos.user.CreateUserDto;
+import upe.br.ProjetoMentis.controller.dtos.user.LoginDto;
 import upe.br.ProjetoMentis.controller.dtos.user.UpdateUserDto;
 import upe.br.ProjetoMentis.controller.dtos.user.UserResponseDto;
 import upe.br.ProjetoMentis.infra.entities.User;
@@ -76,6 +79,14 @@ public class UserServiceImp implements UserService {
     public void validateEmailUniqueness(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Este e-mail já está cadastrado no sistema.");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void login(LoginDto loginDto){
+        if (!loginDto.email().equals("email.teste@gmail") || !loginDto.password().equals("1234")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "O Email ou senha estão incorretos");
         }
     }
 

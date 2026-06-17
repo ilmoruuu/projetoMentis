@@ -9,9 +9,11 @@ import {
   Stethoscope,
   HeartPulse,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 import logoPaciente from "../../assets/logo-paciente.png";
 import logoProfissional from "../../assets/logo-profissional.png";
+import { login } from "../../app/services/AuthService";
 
 type Role = "paciente" | "profissional";
 
@@ -63,13 +65,32 @@ export function LoginPage() {
     searchParams.get("role") === "profissional" ? "profissional" : "paciente",
   );
   const [showPassword, setShowPassword] = useState(false);
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const p = palettes[role];
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Protótipo: encaminha para a área correspondente ao perfil escolhido.
-    navigate(role === "profissional" ? "/professional" : "/patient");
+    setErrorMessage(null);
+    setIsLoading(true);
+
+    try {
+      const result = await login({ email, password });
+
+      console.log("Login realizado com sucesso");
+
+      navigate(role === "profissional" ? "/professional" : "/patient");
+    } catch (e: any) {
+      if (e instanceof Error) {
+        setErrorMessage(e.message);
+      } else {
+        setErrorMessage(String(e));
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -107,7 +128,11 @@ export function LoginPage() {
                     <motion.span
                       layoutId="role-pill"
                       className="absolute inset-0 bg-white rounded-2xl shadow-lg"
-                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 32,
+                      }}
                     />
                   )}
                   <span
@@ -158,6 +183,12 @@ export function LoginPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {errorMessage && (
+              <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm text-center font-medium border border-red-200">
+                {errorMessage}
+              </div>
+            )}
+
             {/* E-mail */}
             <div
               className={`flex items-center gap-3 border-b-2 border-gray-200 pb-2 transition-colors ${p.focusBorder}`}
@@ -168,6 +199,8 @@ export function LoginPage() {
                 required
                 placeholder="E-mail"
                 autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
               />
             </div>
@@ -182,6 +215,8 @@ export function LoginPage() {
                 required
                 placeholder="Senha"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
               />
               <button
@@ -210,13 +245,23 @@ export function LoginPage() {
 
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-2 text-white font-semibold py-3 rounded-full shadow-lg transition-colors"
+              disabled={isLoading} // Desabilita o botão enquanto carrega
+              whileHover={!isLoading ? { scale: 1.02 } : {}}
+              whileTap={!isLoading ? { scale: 0.98 } : {}}
+              className="w-full flex items-center justify-center gap-2 text-white font-semibold py-3 rounded-full shadow-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               style={{ backgroundColor: p.accent }}
             >
-              Entrar
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Entrando...
+                </>
+              ) : (
+                <>
+                  Entrar
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </motion.button>
           </form>
         </motion.div>
