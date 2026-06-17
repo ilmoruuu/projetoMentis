@@ -22,6 +22,7 @@ import {
   cidCodes,
   ProcedureCode,
 } from "../../../shared/data/mockData";
+import { getEstablishments,Establishment } from "../../../app/services/EstablishmentService";
 
 interface ActionRow {
   id: string;
@@ -146,6 +147,27 @@ export function RAASForm() {
 
   const [sexuality, setSexuality] = useState("");
   const [religion, setReligion] = useState("");
+
+  const [establishments, setEstablishments] = useState<Establishment[]>([]);
+  const [selectedEstablishment, setSelectedEstablishment] = useState<Establishment | null>(null);
+
+  useEffect(() => {
+  async function loadEstablishments() {
+    try {
+      const data = await getEstablishments();
+
+      setEstablishments(data);
+
+      if (data.length > 0) {
+        setSelectedEstablishment(data[0]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  loadEstablishments();
+}, []);
 
   const [actions, setActions] = useState<ActionRow[]>([
     {
@@ -323,18 +345,18 @@ export function RAASForm() {
           icon={<Stethoscope className="w-4 h-4" />}
         >
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="CNES" value={currentProfessional.cnes} readOnly />
+            <FormField label="CNES" value={selectedEstablishment?.cnes ?? ""} readOnly />
             <FormField
               label="Nome do Estabelecimento"
-              value={currentProfessional.establishment}
+              value={selectedEstablishment?.name ?? ""}
               readOnly
             />
             <FormField
               label="Município"
-              value={currentProfessional.city}
+              value={selectedEstablishment?.city ?? ""}
               readOnly
             />
-            <FormField label="UF" value={currentProfessional.state} readOnly />
+            <FormField label="UF" value={selectedEstablishment?.state ?? ""} readOnly />
             <FormField
               label="CBO do Profissional"
               value={currentProfessional.cbo}
