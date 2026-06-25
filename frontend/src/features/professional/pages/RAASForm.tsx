@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   X,
   BookOpen,
+  Printer,
 } from "lucide-react";
 import {
   currentProfessional,
@@ -67,7 +68,7 @@ function SectionCard({
   badge?: string;
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="raas-section bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 bg-[#F9FBFF]">
         <div className="w-8 h-8 bg-[#E0EFFF] rounded-lg flex items-center justify-center text-[#1B82BF]">
           {icon}
@@ -263,7 +264,7 @@ export function RAASForm() {
     <>
     <div className="flex gap-6">
       {/* Main Form */}
-      <div className="flex-1 space-y-5">
+      <div id="raas-print" className="flex-1 space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -274,7 +275,14 @@ export function RAASForm() {
               Registro das Ações Ambulatoriais de Saúde — CAPS AD
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="no-print flex items-center gap-3">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#1B82BF] bg-white text-[#1B82BF] text-sm font-medium hover:bg-blue-50 transition-all"
+            >
+              <Printer className="w-4 h-4" />
+              Exportar PDF
+            </button>
             <button
               onClick={() => setShowCodeHelper(!showCodeHelper)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
@@ -294,7 +302,7 @@ export function RAASForm() {
         </div>
 
         {/* Patient Selector */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-6 py-4">
+        <div className="no-print bg-white rounded-2xl shadow-sm border border-gray-100 px-6 py-4">
           <div className="flex items-center gap-4">
             <label className="text-sm font-semibold text-gray-600 whitespace-nowrap">
               Selecionar Paciente:
@@ -741,7 +749,7 @@ export function RAASForm() {
         </SectionCard>
 
         {/* Submit */}
-        <div className="flex items-center justify-end gap-4 pb-8">
+        <div className="no-print flex items-center justify-end gap-4 pb-8">
           <button className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">
             Salvar Rascunho
           </button>
