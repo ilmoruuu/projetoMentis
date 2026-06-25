@@ -22,6 +22,7 @@ import {
   cidCodes,
   ProcedureCode,
 } from "../../../shared/data/mockData";
+import { createDiagnosis } from "../../../app/services/DiagnosisService";
 
 interface ActionRow {
   id: string;
@@ -143,6 +144,8 @@ export function RAASForm() {
   const [broadCIDObservation, setBroadCIDObservation] = useState("");
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [sexuality, setSexuality] = useState("");
   const [religion, setReligion] = useState("");
@@ -225,8 +228,23 @@ export function RAASForm() {
     setActions((prev) => prev.filter((a) => a.id !== id));
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      await createDiagnosis(primaryCID, secondaryCID, broadCIDObservation);
+
+      setSubmitted(true);
+    } catch (e) {
+      if (e instanceof Error) {
+        setErrorMessage(e.message);
+      } else {
+        setErrorMessage(String(e));
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -741,17 +759,25 @@ export function RAASForm() {
         </SectionCard>
 
         {/* Submit */}
-        <div className="flex items-center justify-end gap-4 pb-8">
-          <button className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">
-            Salvar Rascunho
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#1B82BF] to-[#2A9D8F] hover:opacity-90 text-white px-8 py-3 rounded-xl font-medium text-sm transition-all shadow-lg shadow-blue-200"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            Enviar RAAS ao SUS
-          </button>
+        <div className="pb-8">
+          {errorMessage && (
+            <div className="bg-red-50 text-red-500 p-3 rounded-xl text-sm text-center font-medium border border-red-200 mb-4">
+              {errorMessage}
+            </div>
+          )}
+          <div className="flex items-center justify-end gap-4">
+            <button className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">
+              Salvar Rascunho
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="flex items-center gap-2 bg-gradient-to-r from-[#1B82BF] to-[#2A9D8F] hover:opacity-90 text-white px-8 py-3 rounded-xl font-medium text-sm transition-all shadow-lg shadow-blue-200 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {isSubmitting ? "Enviando..." : "Enviar RAAS ao SUS"}
+            </button>
+          </div>
         </div>
       </div>
 
