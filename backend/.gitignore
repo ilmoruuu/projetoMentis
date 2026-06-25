@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Dev local (nao commitar) ###
+run-dev.cmd
+*.log
