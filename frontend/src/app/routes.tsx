@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { LandingPage } from "../features/landing/LandingPage";
+import { LoginPage } from "../features/auth/LoginPage";
 import { ProfessionalLayout } from "../features/professional/components/ProfessionalLayout";
 import { Dashboard } from "../features/professional/pages/Dashboard";
 import { RAASForm } from "../features/professional/pages/RAASForm";
@@ -12,6 +13,10 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: LandingPage,
+  },
+  {
+    path: "/login",
+    Component: LoginPage,
   },
   {
     path: "/professional",
