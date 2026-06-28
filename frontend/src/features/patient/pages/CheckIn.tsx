@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, CheckCircle2, Heart, Send } from "lucide-react";
 import { createHumorHistory, getCurrentPatientId } from "../../../app/services/HumorHistoryService";
+import { createCheckIn, getCurrentPatientId } from "../../../app/services/CheckInService";
 
 const moods = [
   {
@@ -74,6 +75,7 @@ export function CheckIn() {
     try {
       const patientId = await getCurrentPatientId();
       await createHumorHistory(patientId, selectedMood, reflection);
+      await createCheckIn(patientId);
 
       setStep("done");
     } catch (e) {
