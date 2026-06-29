@@ -86,7 +86,7 @@ public class UserServiceImp implements UserService {
     @Transactional
     public void login(LoginDto loginDto){
         if (!loginDto.email().equals("email.teste@gmail") || !loginDto.password().equals("1234")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "O Email ou senha estão incorretos");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "O email ou senha estão incorretos");
         }
     }
 

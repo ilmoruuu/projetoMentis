@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import {
@@ -10,6 +11,11 @@ import {
   Star,
 } from "lucide-react";
 import { currentPatient, milestones } from "../../../shared/data/mockData";
+import {
+  getCurrentPatientId,
+  getHumorHistory,
+  type MoodEntry,
+} from "../../../app/services/HumorHistoryService";
 
 const moodEmojis = ["", "😔", "😟", "😐", "🙂", "😊"];
 const moodLabels = ["", "Muito Ruim", "Ruim", "Neutro", "Bom", "Ótimo"];
@@ -103,20 +109,38 @@ const monthNames = [
 
 export function PatientHome() {
   const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
-  const todayMood = currentPatient.moodHistory.find((m) => m.date === today);
-  const lastMood =
-    currentPatient.moodHistory[currentPatient.moodHistory.length - 1];
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
+  const [moodHistory, setMoodHistory] = useState<MoodEntry[]>([]);
+
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      try {
+        const patientId = await getCurrentPatientId();
+        const history = await getHumorHistory(patientId);
+        if (active) setMoodHistory(history);
+      } catch {
+        if (active) setMoodHistory([]);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const todayMood = moodHistory.find((m) => m.date === today);
 
   const earnedMilestones = milestones.filter(
     (m) => m.days <= currentPatient.sobrietyDays,
   );
 
-  const monthStats = getMonthStats(
-    currentPatient.moodHistory.map((m) => m.date),
-  );
+  const monthStats = getMonthStats(moodHistory.map((m) => m.date));
 
-  const streak = currentPatient.moodHistory.filter((m) => m.mood >= 3).length;
+  const streak = moodHistory.filter((m) => m.mood >= 3).length;
 
   return (
     <div className="px-4 py-5 space-y-4">
@@ -253,7 +277,7 @@ export function PatientHome() {
           </div>
         </div>
         <div className="flex items-end justify-between gap-1">
-          {currentPatient.moodHistory.slice(-7).map((entry, i) => {
+          {moodHistory.slice(-7).map((entry, i) => {
             const d = new Date(entry.date + "T12:00:00");
             const dayName = d
               .toLocaleDateString("pt-BR", { weekday: "short" })
@@ -314,7 +338,7 @@ export function PatientHome() {
             {streak}
             <span className="text-sm font-normal text-gray-400">
               {" "}
-              / {currentPatient.moodHistory.length}
+              / {moodHistory.length}
             </span>
           </p>
         </motion.div>
