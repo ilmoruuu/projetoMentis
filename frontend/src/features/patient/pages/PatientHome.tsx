@@ -392,8 +392,9 @@ const initials = name
 
 const firstName = name.split(" ")[0];
 
-  const totalDays =
-    Number(patient.sobriety ?? 0);
+  const totalDays = checkins.filter(
+  (checkin) => checkin.status === true
+).length;
 
 
 
@@ -402,6 +403,15 @@ const firstName = name.split(" ")[0];
       ?
       checkins[checkins.length - 1]
       : null;
+      const today = new Date()
+  .toISOString()
+  .split("T")[0];
+
+
+const alreadyCheckedToday = checkins.some(
+  (checkin) =>
+    checkin.date.split("T")[0] === today
+);
 
 
 
@@ -457,67 +467,55 @@ text-[#7C3826]
 
 
         {
+  alreadyCheckedToday
+
+  ?
+
+  <div className="
+  text-center
+  ">
+
+    <p className="text-5xl">
+      😊
+    </p>
 
 
-          lastCheckin
+    <p className="
+    text-gray-500
+    mt-2
+    ">
 
-            ?
+      Check-in realizado hoje
 
-
-            <div className="
-text-center
-">
-
-              <p className="text-5xl">
-
-                😊
-
-              </p>
+    </p>
 
 
-              <p className="
-text-gray-500
-mt-2
-">
-
-                Check-in realizado
-
-              </p>
+  </div>
 
 
-            </div>
+  :
 
 
+  <button
 
-            :
+    onClick={() => navigate("/patient/checkin")}
 
+    className="
+    w-full
+    bg-[#F4A261]
+    text-white
+    py-4
+    rounded-2xl
+    font-bold
+    "
 
-            <button
+  >
 
-              onClick={() => navigate("/patient/checkin")}
+    Fazer Check-in
 
-              className="
-w-full
+  </button>
 
-bg-[#F4A261]
-
-text-white
-
-py-4
-
-rounded-2xl
-
-font-bold
-"
-
-            >
-
-              Fazer Check-in
-
-            </button>
-
-
-        }
+}
 
 
 
