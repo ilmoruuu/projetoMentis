@@ -3,6 +3,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
+RUN rm -f target/*-plain.jar target/original-*.jar
 
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
