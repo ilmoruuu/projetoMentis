@@ -3,10 +3,14 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
-RUN rm -f target/*-plain.jar target/original-*.jar
 
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+COPY --from=build /app/target/*.jar ./
+
+RUN rm -f *-plain.jar original-*.jar
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+CMD ["sh", "-c", "java -jar *.jar"]
