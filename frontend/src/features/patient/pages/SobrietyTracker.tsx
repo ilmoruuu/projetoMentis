@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight, Trophy, Zap, Star, X } from "lucide-react";
 import { currentPatient, milestones } from "../../../shared/data/mockData";
+import {
+  getCurrentPatientId,
+  getHumorHistory,
+  type MoodEntry,
+} from "../../../app/services/HumorHistoryService";
 
 const moodEmojis = ["", "😔", "😟", "😐", "🙂", "😊"];
 const moodLabels = ["", "Muito Ruim", "Ruim", "Neutro", "Bom", "Ótimo"];
@@ -213,22 +218,36 @@ function MonthCalendar({
 }
 
 export function SobrietyTracker() {
-  const markedDates = new Set(currentPatient.moodHistory.map((m) => m.date));
+  const [moodHistory, setMoodHistory] = useState<MoodEntry[]>([]);
 
-  // Open on the month of the most recent activity (or current month if none)
-  const initialDate = (() => {
-    const dates = [...currentPatient.moodHistory.map((m) => m.date)].sort();
-    if (dates.length === 0) return new Date();
-    return new Date(dates[dates.length - 1] + "T12:00:00");
-  })();
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      try {
+        const patientId = await getCurrentPatientId();
+        const history = await getHumorHistory(patientId);
+        if (active) setMoodHistory(history);
+      } catch {
+        if (active) setMoodHistory([]);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const markedDates = new Set(moodHistory.map((m) => m.date));
+
   const [view, setView] = useState({
-    year: initialDate.getFullYear(),
-    month: initialDate.getMonth(),
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
   });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const selectedEntry = selectedDate
-    ? currentPatient.moodHistory.find((m) => m.date === selectedDate) ?? null
+    ? moodHistory.find((m) => m.date === selectedDate) ?? null
     : null;
 
   const goPrev = () =>
@@ -250,7 +269,7 @@ export function SobrietyTracker() {
   const earnedMilestones = milestones.filter((m) => m.days <= days);
   const nextMilestone = milestones.find((m) => m.days > days);
 
-  const monthMarkedCount = currentPatient.moodHistory.filter((m) => {
+  const monthMarkedCount = moodHistory.filter((m) => {
     const d = new Date(m.date + "T12:00:00");
     return d.getFullYear() === view.year && d.getMonth() === view.month;
   }).length;

@@ -19,6 +19,9 @@ public record CreateUserDto(
         @NotNull(message = "O email é obrigatório")
         String email,
 
+                @NotNull(message = "A senha é obrigatório")
+        String password,
+
         @Valid
         CreatePatientDto patient,
 
@@ -31,6 +34,7 @@ public record CreateUserDto(
                         user.getRole(),
                         user.getName(),
                         user.getEmail(),
+                        user.getPassword(),
                         CreatePatientDto.toDto(user.getPatient()),
                         CreateProfessionalDto.toDto(user.getProfessional())
                 );

@@ -1,27 +1,52 @@
-import axios from "axios";
-
-const BASE_URL = "http://localhost:8080";
+import api from "./api";
 
 export interface Achievement {
-    id: string;
-    title: string;
-    description: string;
-    icon?: string;
-    days: number;
+  id: string;
+  description: string;
+  goalInDays: number;
+  patientAchievements: PatientAchievement[];
+}
+
+export interface PatientAchievement {
+  patientId: string;
+  achievementId: string;
+  acquisitionDate: string;
 }
 
 
 export async function getAchievements(): Promise<Achievement[]> {
-    try {
-        const response = await axios.get(
-            `${BASE_URL}/achievements`
-        );
+  try {
+    const response = await api.get<Achievement[]>("/achievements");
 
-        return response.data;
+    return response.data;
 
-    } catch (error) {
-        throw new Error(
-            "Não foi possível buscar conquistas"
-        );
-    }
+  } catch (error) {
+    throw new Error(
+      "Não foi possível carregar as conquistas"
+    );
+  }
+}
+
+
+export async function getAchievementById(
+  id: string
+): Promise<Achievement> {
+
+  try {
+
+    const response =
+      await api.get<Achievement>(
+        `/achievements/${id}`
+      );
+
+    return response.data;
+
+
+  } catch(error){
+
+    throw new Error(
+      "Conquista não encontrada"
+    );
+
+  }
 }

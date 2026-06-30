@@ -1,0 +1,36 @@
+/*
+ * Estilos de impressão (Exportar PDF do formulário RAAS).
+ * Técnica: esconde tudo na impressão e revela apenas a área #raas-print,
+ * ocultando também qualquer elemento marcado com .no-print.
+ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #raas-print,
+  #raas-print * {
+    visibility: visible;
+  }
+
+  #raas-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    /* preserva as cores dos cabeçalhos das seções no PDF */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* elementos de interface que não fazem parte do documento */
+  .no-print {
+    display: none !important;
+  }
+
+  /* evita que um card de seção seja cortado entre páginas */
+  .raas-section {
+    break-inside: avoid;
+  }
+}
