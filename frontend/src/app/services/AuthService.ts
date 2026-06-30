@@ -11,6 +11,11 @@ export async function login(cretendials: LoginDto) {
   try {
     const response = await axios.post(`${BASE_URL}/users/login`, cretendials);
 
+    localStorage.setItem(
+    "user",
+    JSON.stringify(response.data)
+    );
+
     return response.data
   } catch (e) {
     if (axios.isAxiosError(e)) {

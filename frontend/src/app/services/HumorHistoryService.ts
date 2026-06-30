@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getLoggedUser } from "./AuthStorage";
 
 const BASE_URL = 'http://localhost:8080';
 
@@ -72,23 +73,27 @@ export function levelFromMoodType(moodType: string): number {
  * Temporário: enquanto o login é hardcoded e não devolve a identidade
  * do usuário, usamos o primeiro paciente cadastrado (GET /patients).
  */
-export async function getCurrentPatientId(): Promise<string> {
-  try {
-    const response = await axios.get(`${BASE_URL}/patients`);
-    const patients = response.data;
+export function getCurrentPatientId(): string {
 
-    if (!Array.isArray(patients) || patients.length === 0) {
-      throw new Error('Nenhum paciente cadastrado no sistema.');
-    }
 
-    return patients[0].id;
-  } catch (e) {
-    if (e instanceof Error && e.message === 'Nenhum paciente cadastrado no sistema.') {
-      throw e;
-    }
+ const user = getLoggedUser();
 
-    throw new Error('Não foi possível identificar o paciente. Tente novamente mais tarde.');
-  }
+
+ if(!user){
+    throw new Error("Paciente não autenticado");
+ }
+
+
+ if(user.patient?.id){
+    return user.patient.id;
+ }
+
+
+ throw new Error(
+   "Usuário logado não possui paciente"
+ );
+
+
 }
 
 /**

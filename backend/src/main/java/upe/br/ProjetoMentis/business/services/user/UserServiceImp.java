@@ -83,11 +83,29 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    @Transactional
-    public void login(LoginDto loginDto){
-        if (!loginDto.email().equals("email.teste@gmail") || !loginDto.password().equals("1234")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "O email ou senha estão incorretos");
+    @Transactional(readOnly = true)
+    public UserResponseDto login(LoginDto loginDto) {
+
+
+        User user = userRepository.findByEmail(loginDto.email())
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.UNAUTHORIZED,
+                                "O email ou senha estão incorretos"
+                        )
+                );
+
+
+        if(!user.getPassword().equals(loginDto.password())){
+
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "O email ou senha estão incorretos"
+            );
         }
+
+
+        return UserResponseDto.toDto(user);
     }
 
     @Override
