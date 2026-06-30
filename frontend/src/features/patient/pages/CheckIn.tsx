@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, CheckCircle2, Heart, Send } from "lucide-react";
+import { createHumorHistory, getCurrentPatientId } from "../../../app/services/HumorHistoryService";
+import { createCheckIn } from "../../../app/services/CheckInService";
 
 const moods = [
   {
@@ -52,6 +54,7 @@ export function CheckIn() {
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [reflection, setReflection] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleMoodSelect = (idx: number) => {
     setSelectedMood(idx);
@@ -64,10 +67,26 @@ export function CheckIn() {
   };
 
   const handleSubmit = async () => {
+    if (selectedMood === null) return;
+
+    setErrorMessage(null);
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setIsSubmitting(false);
-    setStep("done");
+
+    try {
+      const patientId = await getCurrentPatientId();
+      await createHumorHistory(patientId, selectedMood, reflection);
+      await createCheckIn(patientId);
+
+      setStep("done");
+    } catch (e) {
+      if (e instanceof Error) {
+        setErrorMessage(e.message);
+      } else {
+        setErrorMessage(String(e));
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const selected = selectedMood !== null ? moods[selectedMood] : null;
@@ -267,6 +286,12 @@ export function CheckIn() {
                 </p>
               </div>
             </div>
+
+            {errorMessage && (
+              <div className="bg-red-50 text-red-500 p-3 rounded-xl text-sm text-center font-medium border border-red-200 mb-4">
+                {errorMessage}
+              </div>
+            )}
 
             <div className="flex gap-3">
               <button

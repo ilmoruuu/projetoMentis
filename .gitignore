@@ -1,0 +1,6 @@
+# Ferramentas locais do Claude Code (config de preview etc.)
+.claude/
+.idea/
+.vite/
+node_modules/
+.env

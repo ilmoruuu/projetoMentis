@@ -72,26 +72,48 @@ export function LoginPage() {
   const p = palettes[role];
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    setIsLoading(true);
+  e.preventDefault();
+  setErrorMessage(null);
+  setIsLoading(true);
 
-    try {
-      const result = await login({ email, password });
+  try {
 
-      console.log("Login realizado com sucesso");
+    const result = await login({
+      email,
+      password
+    });
 
-      navigate(role === "profissional" ? "/professional" : "/patient");
-    } catch (e: any) {
-      if (e instanceof Error) {
-        setErrorMessage(e.message);
-      } else {
-        setErrorMessage(String(e));
-      }
-    } finally {
-      setIsLoading(false);
+
+    console.log("USUARIO LOGADO:", result);
+
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(result)
+    );
+
+
+    navigate(
+      role === "profissional"
+        ? "/professional"
+        : "/patient"
+    );
+
+
+  } catch (e: any) {
+
+    if (e instanceof Error) {
+      setErrorMessage(e.message);
+    } else {
+      setErrorMessage(String(e));
     }
-  };
+
+  } finally {
+
+    setIsLoading(false);
+
+  }
+};
 
   return (
     <div className="min-h-screen grid md:grid-cols-2">
