@@ -52,6 +52,7 @@ public class PatientServiceImp implements PatientService{
         User user = new User();
         user.setName(patient.name());
         user.setEmail(patient.email());
+        user.setPassword(patient.password());
         user.setRole(UserRole.PATIENT);
 
         Patient newPatient = new Patient();

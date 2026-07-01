@@ -12,6 +12,8 @@ public record CreateProfessionalDto(
         @Email(message = "E-mail inválido")
         String email,
 
+        String password,
+
         @NotBlank(message = "O registro profissional (crp) é obrigatório")
         String crp
 ) {
@@ -19,6 +21,7 @@ public record CreateProfessionalDto(
                 return new CreateProfessionalDto(
                         professional.getUser().getName(),
                         professional.getUser().getEmail(),
+                        professional.getUser().getPassword(),
                         professional.getCrp()
                 );
         }

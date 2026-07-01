@@ -15,6 +15,8 @@ public record CreatePatientDto(
         @Email(message = "E-mail inválido")
         String email,
 
+        String password,
+
         String cbo,
 
         @NotNull(message = "Data de nascimento é obrigatória")
@@ -45,6 +47,7 @@ public record CreatePatientDto(
                         patient.getUser().getName(),
                         patient.getUser().getEmail(),
                         patient.getCbo(),
+                        patient.getUser().getPassword(),
                         patient.getDateOfBirth(),
                         patient.getGender(),
                         patient.getSex(),

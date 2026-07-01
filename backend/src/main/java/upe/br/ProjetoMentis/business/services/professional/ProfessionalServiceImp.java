@@ -51,6 +51,7 @@ public class ProfessionalServiceImp implements ProfessionalService{
         user.setEmail(professional.email());
         user.setName(professional.name());
         user.setRole(UserRole.PROFESSIONAL);
+        user.setPassword(professional.password());
 
         Professional newProfessional = new Professional();
         newProfessional.setCrp(professional.crp());

@@ -3,6 +3,8 @@ package upe.br.ProjetoMentis.infra.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import upe.br.ProjetoMentis.business.services.patient.PatientService;
+import upe.br.ProjetoMentis.business.services.professional.ProfessionalService;
 import upe.br.ProjetoMentis.business.services.user.UserService;
 import upe.br.ProjetoMentis.controller.dtos.patient.CreatePatientDto;
 import upe.br.ProjetoMentis.controller.dtos.professional.CreateProfessionalDto;
@@ -18,6 +20,8 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final PatientService patientService;
+    private final ProfessionalService professionalService;
 
     @Override
     public void run(String... args) {
@@ -27,6 +31,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             CreatePatientDto patientDto = new CreatePatientDto(
                     "Fulano de Cicrano",
                     "fulano.cicrano@email.com",
+                    "123456",
                     "2235-05",
                     LocalDate.of(1990, 5, 15),
                     "Cisgênero",
@@ -34,7 +39,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     "Parda",
                     "Recife",
                     "PE",
-                    "50000-000",
+                    "50000000",
                     "Rua das Flores, 123",
                     "Sóbrio"
             );
@@ -48,7 +53,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     null
             );
 
-            userService.createUser(userPatient);
+            patientService.createPatient(patientDto);
         }
 
         if (!userRepository.existsByEmail("psicologo@mentis.com")) {
@@ -56,6 +61,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             CreateProfessionalDto profissional = new CreateProfessionalDto(
                     "Dr. João Silva",
                     "psicologo@mentis.com",
+                    "123456",
                     "CRP-04/12345"
             );
 
@@ -68,7 +74,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     profissional
             );
 
-            userService.createUser(userProfissional);
+            professionalService.createProfessional(profissional);
         }
     }
 }
