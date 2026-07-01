@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export interface DiagnosisResponse {
   id: string;
@@ -16,41 +16,41 @@ export interface DiagnosisResponse {
  * (back-end) e contém EXATAMENTE os CIDs suportados pelo back-end.
  */
 const CID_CODE_TO_ENUM: Record<string, string> = {
-  'F10.0': 'F100',
-  'F10.1': 'F101',
-  'F10.2': 'F102',
-  'F11.0': 'F110',
-  'F11.1': 'F111',
-  'F11.2': 'F112',
-  'F12.0': 'F120',
-  'F12.1': 'F121',
-  'F12.2': 'F122',
-  'F13.0': 'F130',
-  'F13.1': 'F131',
-  'F13.2': 'F132',
-  'F14.0': 'F140',
-  'F14.1': 'F141',
-  'F14.2': 'F142',
-  'F15.0': 'F150',
-  'F15.1': 'F151',
-  'F15.2': 'F152',
-  'F17.0': 'F170',
-  'F17.1': 'F171',
-  'F17.2': 'F172',
-  'F20.0': 'F200',
-  'F20.1': 'F201',
-  'F31.0': 'F310',
-  'F32.0': 'F320',
-  'F32.1': 'F321',
-  'F32.2': 'F322',
-  'F40.0': 'F400',
-  'F41.0': 'F410',
-  'F41.1': 'F411',
-  'F42.0': 'F420',
-  'F43.1': 'F431',
-  X65: 'X650',
-  X66: 'X660',
-  X68: 'X680',
+  "F10.0": "F100",
+  "F10.1": "F101",
+  "F10.2": "F102",
+  "F11.0": "F110",
+  "F11.1": "F111",
+  "F11.2": "F112",
+  "F12.0": "F120",
+  "F12.1": "F121",
+  "F12.2": "F122",
+  "F13.0": "F130",
+  "F13.1": "F131",
+  "F13.2": "F132",
+  "F14.0": "F140",
+  "F14.1": "F141",
+  "F14.2": "F142",
+  "F15.0": "F150",
+  "F15.1": "F151",
+  "F15.2": "F152",
+  "F17.0": "F170",
+  "F17.1": "F171",
+  "F17.2": "F172",
+  "F20.0": "F200",
+  "F20.1": "F201",
+  "F31.0": "F310",
+  "F32.0": "F320",
+  "F32.1": "F321",
+  "F32.2": "F322",
+  "F40.0": "F400",
+  "F41.0": "F410",
+  "F41.1": "F411",
+  "F42.0": "F420",
+  "F43.1": "F431",
+  X65: "X650",
+  X66: "X660",
+  X68: "X680",
 };
 
 /**
@@ -80,7 +80,7 @@ export async function createDiagnosis(
   observation: string,
 ): Promise<DiagnosisResponse> {
   if (!primaryCidCode.trim()) {
-    throw new Error('Informe o CID-10 principal.');
+    throw new Error("Informe o CID-10 principal.");
   }
 
   const cid10Principal = cidEnumFromCode(primaryCidCode);
@@ -99,11 +99,13 @@ export async function createDiagnosis(
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const mensagemErro =
-        e.response?.data?.message || 'Não foi possível salvar o diagnóstico';
+        e.response?.data?.message || "Não foi possível salvar o diagnóstico";
 
       throw new Error(mensagemErro);
     }
 
-    throw new Error('Não foi possível conectar ao servidor, Tente novamente mais tarde');
+    throw new Error(
+      "Não foi possível conectar ao servidor, Tente novamente mais tarde",
+    );
   }
 }

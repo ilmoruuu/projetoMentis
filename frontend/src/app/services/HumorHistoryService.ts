@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 import { getLoggedUser } from "./AuthStorage";
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export interface HumorHistoryResponse {
   id: string;
@@ -27,11 +27,11 @@ export interface MoodEntry {
  * Aqui mapeamos os 5 níveis da UI para um valor representativo do enum.
  */
 const LEVEL_TO_MOODTYPE: Record<number, string> = {
-  0: 'TRISTE', // Muito Ruim
-  1: 'DESANIMADO', // Ruim
-  2: 'NEUTRO', // Neutro
-  3: 'CALMO', // Bom
-  4: 'FELIZ', // Ótimo
+  0: "TRISTE", // Muito Ruim
+  1: "DESANIMADO", // Ruim
+  2: "NEUTRO", // Neutro
+  3: "CALMO", // Bom
+  4: "FELIZ", // Ótimo
 };
 
 /**
@@ -60,7 +60,7 @@ const MOODTYPE_TO_LEVEL: Record<string, number> = {
 };
 
 export function moodTypeFromLevel(levelIndex: number): string {
-  return LEVEL_TO_MOODTYPE[levelIndex] ?? 'NEUTRO';
+  return LEVEL_TO_MOODTYPE[levelIndex] ?? "NEUTRO";
 }
 
 export function levelFromMoodType(moodType: string): number {
@@ -74,26 +74,17 @@ export function levelFromMoodType(moodType: string): number {
  * do usuário, usamos o primeiro paciente cadastrado (GET /patients).
  */
 export function getCurrentPatientId(): string {
+  const user = getLoggedUser();
 
-
- const user = getLoggedUser();
-
-
- if(!user){
+  if (!user) {
     throw new Error("Paciente não autenticado");
- }
+  }
 
-
- if(user.patient?.id){
+  if (user.patient?.id) {
     return user.patient.id;
- }
+  }
 
-
- throw new Error(
-   "Usuário logado não possui paciente"
- );
-
-
+  throw new Error("Usuário logado não possui paciente");
 }
 
 /**
@@ -111,19 +102,21 @@ export async function createHumorHistory(
     const response = await axios.post(`${BASE_URL}/humor-history`, {
       patientId,
       moodType: moodTypeFromLevel(levelIndex),
-      description: reflection.trim() || 'Sem reflexão registrada.',
+      description: reflection.trim() || "Sem reflexão registrada.",
     });
 
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const mensagemErro =
-        e.response?.data?.message || 'Não foi possível registrar o humor';
+        e.response?.data?.message || "Não foi possível registrar o humor";
 
       throw new Error(mensagemErro);
     }
 
-    throw new Error('Não foi possível conectar ao servidor, Tente novamente mais tarde');
+    throw new Error(
+      "Não foi possível conectar ao servidor, Tente novamente mais tarde",
+    );
   }
 }
 
@@ -133,7 +126,9 @@ export async function createHumorHistory(
  */
 export async function getHumorHistory(patientId: string): Promise<MoodEntry[]> {
   try {
-    const response = await axios.get(`${BASE_URL}/humor-history/patient/${patientId}`);
+    const response = await axios.get(
+      `${BASE_URL}/humor-history/patient/${patientId}`,
+    );
     const history: HumorHistoryResponse[] = response.data ?? [];
 
     return history
@@ -146,11 +141,14 @@ export async function getHumorHistory(patientId: string): Promise<MoodEntry[]> {
   } catch (e) {
     if (axios.isAxiosError(e)) {
       const mensagemErro =
-        e.response?.data?.message || 'Não foi possível carregar o histórico de humor';
+        e.response?.data?.message ||
+        "Não foi possível carregar o histórico de humor";
 
       throw new Error(mensagemErro);
     }
 
-    throw new Error('Não foi possível conectar ao servidor, Tente novamente mais tarde');
+    throw new Error(
+      "Não foi possível conectar ao servidor, Tente novamente mais tarde",
+    );
   }
 }
