@@ -30,7 +30,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             CreatePatientDto patientDto = new CreatePatientDto(
                     "Fulano de Cicrano",
-                    "fulano.cicrano@email.com",
+                    "patient@mentis.com",
                     "123456",
                     "2235-05",
                     LocalDate.of(1990, 5, 15),
