@@ -48,6 +48,7 @@ public class UserServiceImp implements UserService {
         newUser.setName(user.name());
         newUser.setEmail(user.email());
         newUser.setRole(user.role());
+        newUser.setPassword(user.password());
 
         User savedUser = userRepository.save(newUser);
         return UserResponseDto.toDto(savedUser);
