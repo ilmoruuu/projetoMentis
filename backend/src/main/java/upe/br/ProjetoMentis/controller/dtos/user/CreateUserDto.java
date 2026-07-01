@@ -19,7 +19,7 @@ public record CreateUserDto(
         @NotNull(message = "O email é obrigatório")
         String email,
 
-                @NotNull(message = "A senha é obrigatório")
+        @NotNull(message = "A senha é obrigatório")
         String password,
 
         @Valid
